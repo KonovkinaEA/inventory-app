@@ -1,5 +1,6 @@
-package com.example.inventoryapp.data.navigation
+package com.example.inventoryapp.ui.navigation
 
 interface Destination {
+
     val route: String
 }

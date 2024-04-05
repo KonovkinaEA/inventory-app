@@ -2,7 +2,7 @@ package com.example.inventoryapp.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface Repository {
+interface ScannerManager {
 
     val scanningData: Flow<String?>
 }
