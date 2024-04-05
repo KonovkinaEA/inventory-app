@@ -28,7 +28,8 @@ data class ExtendedColors(
     val backTertiary: Color = Color.Unspecified,
     val labelPrimary: Color = Color.Unspecified,
     val labelSecondary: Color = Color.Unspecified,
-    val labelTertiary: Color = Color.Unspecified
+    val labelTertiary: Color = Color.Unspecified,
+    val supportSeparator: Color = Color.Unspecified,
 )
 
 private val lightExtendedColors = ExtendedColors(
@@ -37,7 +38,8 @@ private val lightExtendedColors = ExtendedColors(
     backTertiary = LightBackTertiary,
     labelPrimary = LightLabelPrimary,
     labelSecondary = LightLabelSecondary,
-    labelTertiary = LightLabelTertiary
+    labelTertiary = LightLabelTertiary,
+    supportSeparator = LightSupportSeparator
 )
 
 private val darkExtendedColors = ExtendedColors(
@@ -46,7 +48,8 @@ private val darkExtendedColors = ExtendedColors(
     backTertiary = DarkBackTertiary,
     labelPrimary = DarkLabelPrimary,
     labelSecondary = DarkLabelSecondary,
-    labelTertiary = DarkLabelTertiary
+    labelTertiary = DarkLabelTertiary,
+    supportSeparator = DarkSupportSeparator
 )
 
 private val LocalExtendedColors = staticCompositionLocalOf {
@@ -98,7 +101,7 @@ object ExtendedTheme {
     val buttonColors: ButtonColors
         @Composable
         get() = ButtonDefaults.buttonColors(
-            containerColor = colors.backSecondary,
-            contentColor = colors.labelSecondary
+            containerColor = colors.backTertiary,
+            contentColor = colors.labelTertiary
         )
 }

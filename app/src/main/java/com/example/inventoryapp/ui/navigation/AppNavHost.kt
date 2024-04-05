@@ -5,19 +5,19 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.inventoryapp.data.navigation.Scanner
-import com.example.inventoryapp.ui.screens.ScannerScreen
+import com.example.inventoryapp.ui.screens.scanner.ScannerScreen
+import com.example.inventoryapp.ui.screens.start.StartScreen
 
 @Composable
-fun AppNavHost(
-    modifier: Modifier,
-    navController: NavHostController
-) {
+fun AppNavHost(navController: NavHostController) {
     NavHost(
-        modifier = modifier,
+        modifier = Modifier,
         navController = navController,
-        startDestination = Scanner.route
+        startDestination = Start.route
     ) {
+        composable(Start.route) {
+            StartScreen(toDetailsScreen = { navController.navigate(Scanner.route) })
+        }
         composable(Scanner.route) {
             ScannerScreen()
         }
