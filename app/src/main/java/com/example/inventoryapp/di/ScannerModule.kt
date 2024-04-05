@@ -2,10 +2,9 @@ package com.example.inventoryapp.di
 
 import android.app.Application
 import android.content.Context
-import com.example.inventoryapp.data.Repository
-import com.example.inventoryapp.data.RepositoryImpl
+import com.example.inventoryapp.data.ScannerManager
+import com.example.inventoryapp.data.ScannerManagerImpl
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.Binds
@@ -17,11 +16,11 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
-interface AppModule {
+interface ScannerModule {
 
     @ViewModelScoped
     @Binds
-    fun provideRepository(repository: RepositoryImpl): Repository
+    fun provideScannerManager(scannerManager: ScannerManagerImpl): ScannerManager
 
     companion object {
 
@@ -30,9 +29,7 @@ interface AppModule {
         fun provideBarCodeScanner(
             context: Context,
             options: GmsBarcodeScannerOptions
-        ): GmsBarcodeScanner {
-            return GmsBarcodeScanning.getClient(context, options)
-        }
+        ) = GmsBarcodeScanning.getClient(context, options)
 
         @ViewModelScoped
         @Provides
@@ -44,8 +41,6 @@ interface AppModule {
 
         @ViewModelScoped
         @Provides
-        fun provideContext(application: Application): Context {
-            return application.applicationContext
-        }
+        fun provideContext(application: Application): Context = application.applicationContext
     }
 }

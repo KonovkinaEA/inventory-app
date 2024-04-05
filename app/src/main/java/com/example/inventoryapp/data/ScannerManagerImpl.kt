@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RepositoryImpl @Inject constructor(
+class ScannerManagerImpl @Inject constructor(
     private val scanner: GmsBarcodeScanner
-) : Repository {
+) : ScannerManager {
 
     override val scanningData: Flow<String?>
         get() = callbackFlow {
