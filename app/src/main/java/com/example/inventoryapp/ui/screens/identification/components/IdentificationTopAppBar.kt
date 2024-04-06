@@ -15,6 +15,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,11 +34,27 @@ import com.example.inventoryapp.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdentificationTopAppBar(enableSave: Boolean, onUiAction: (IdentificationUiAction) -> Unit) {
+    var openAlertDialog by remember { mutableStateOf(false) }
+
+    if (openAlertDialog) IdentificationAlertDialog(
+        onDismissRequest = { openAlertDialog = false },
+        onConfirmation = {
+            openAlertDialog = false
+            onUiAction(IdentificationUiAction.CloseScreen)
+        }
+    )
+
     TopAppBar(
         modifier = Modifier.shadow(10.dp),
         title = {},
         navigationIcon = {
-            IconButton(onClick = { onUiAction(IdentificationUiAction.CloseScreen) }) {
+            IconButton(onClick = {
+                if (enableSave) {
+                    openAlertDialog = true
+                } else {
+                    onUiAction(IdentificationUiAction.CloseScreen)
+                }
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back to the Start screen button icon",
