@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -29,6 +31,7 @@ data class ExtendedColors(
     val labelPrimary: Color = Color.Unspecified,
     val labelSecondary: Color = Color.Unspecified,
     val labelTertiary: Color = Color.Unspecified,
+    val labelDisable: Color = Color.Unspecified,
     val supportSeparator: Color = Color.Unspecified,
 )
 
@@ -39,6 +42,7 @@ private val lightExtendedColors = ExtendedColors(
     labelPrimary = LightLabelPrimary,
     labelSecondary = LightLabelSecondary,
     labelTertiary = LightLabelTertiary,
+    labelDisable = LightLabelDisable,
     supportSeparator = LightSupportSeparator
 )
 
@@ -49,6 +53,7 @@ private val darkExtendedColors = ExtendedColors(
     labelPrimary = DarkLabelPrimary,
     labelSecondary = DarkLabelSecondary,
     labelTertiary = DarkLabelTertiary,
+    labelDisable = DarkLabelDisable,
     supportSeparator = DarkSupportSeparator
 )
 
@@ -79,7 +84,7 @@ fun InventoryAppTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = extendedColors.backPrimary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
@@ -104,4 +109,7 @@ object ExtendedTheme {
             containerColor = colors.backTertiary,
             contentColor = colors.labelTertiary
         )
+    val cardColors: CardColors
+        @Composable
+        get() = CardDefaults.cardColors(containerColor = colors.backSecondary)
 }

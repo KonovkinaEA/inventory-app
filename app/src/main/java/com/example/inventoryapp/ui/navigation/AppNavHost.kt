@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.inventoryapp.ui.screens.scanner.ScannerScreen
+import com.example.inventoryapp.ui.screens.identification.IdentificationScreen
 import com.example.inventoryapp.ui.screens.start.StartScreen
 
 @Composable
@@ -16,10 +16,13 @@ fun AppNavHost(navController: NavHostController) {
         startDestination = Start.route
     ) {
         composable(Start.route) {
-            StartScreen(toDetailsScreen = { navController.navigate(Scanner.route) })
+            StartScreen(toIdentification = { navController.navigate(Identification.route) })
         }
-        composable(Scanner.route) {
-            ScannerScreen()
+        composable(Identification.route) {
+            IdentificationScreen(onClose = {
+                navController.previousBackStackEntry
+                navController.popBackStack()
+            })
         }
     }
 }

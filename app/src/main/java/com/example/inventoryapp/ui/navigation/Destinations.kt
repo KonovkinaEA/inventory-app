@@ -5,7 +5,6 @@ object Start : Destination {
     override val route = "start"
 }
 
-object Scanner : Destination {
-
-    override val route = "scanner"
+object Identification : Destination {
+    override val route = "identification"
 }
