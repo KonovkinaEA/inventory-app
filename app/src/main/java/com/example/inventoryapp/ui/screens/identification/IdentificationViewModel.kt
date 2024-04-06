@@ -3,6 +3,7 @@ package com.example.inventoryapp.ui.screens.identification
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventoryapp.data.ScannerManager
+import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.di.IoDispatcher
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,9 @@ class IdentificationViewModel @Inject constructor(
     private val scannerManager: ScannerManager
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(IdentificationUiState())
+    private val initialItem = InventoryItem()
+
+    private val _uiState = MutableStateFlow(IdentificationUiState(initialItem))
     val uiState = _uiState.asStateFlow()
 
     private val _closeScreen = Channel<Boolean>()
@@ -33,23 +36,23 @@ class IdentificationViewModel @Inject constructor(
             }
             IdentificationUiAction.SaveData -> {
                 viewModelScope.launch { _closeScreen.send(true) }
-                // TODO: viewModelScope.launch(ioDispatcher) {}
+                // TODO: отправка новых данных в репозиторий
             }
             IdentificationUiAction.StartScanning -> startScanning()
-            is IdentificationUiAction.UpdateBarcode -> viewModelScope.launch {
-                _uiState.value = uiState.value.copy(barcode = action.barcode)
+            is IdentificationUiAction.UpdateBarcode -> {
+                updateState(uiState.value.item.copy(barcode = action.barcode))
             }
-            is IdentificationUiAction.UpdateCode -> viewModelScope.launch {
-                _uiState.value = uiState.value.copy(code = action.code)
+            is IdentificationUiAction.UpdateCode -> {
+                updateState(uiState.value.item.copy(code = action.code))
             }
-            is IdentificationUiAction.UpdateInventoryNumber -> viewModelScope.launch {
-                _uiState.value = uiState.value.copy(number = action.number)
+            is IdentificationUiAction.UpdateInventoryNumber -> {
+                updateState(uiState.value.item.copy(number = action.number))
             }
-            is IdentificationUiAction.UpdateAuditorium -> viewModelScope.launch {
-                _uiState.value = uiState.value.copy(auditorium = action.auditorium)
+            is IdentificationUiAction.UpdateAuditorium -> {
+                updateState(uiState.value.item.copy(auditorium = action.auditorium))
             }
-            is IdentificationUiAction.UpdateType -> viewModelScope.launch {
-                _uiState.value = uiState.value.copy(type = action.type)
+            is IdentificationUiAction.UpdateType -> {
+                updateState(uiState.value.item.copy(type = action.type))
             }
         }
     }
@@ -57,18 +60,22 @@ class IdentificationViewModel @Inject constructor(
     private fun startScanning() {
         viewModelScope.launch(ioDispatcher) {
             scannerManager.scanningData.collect {
-                if (!it.isNullOrBlank()) {
-                    _uiState.value = uiState.value.copy(barcode = it)
-                }
+                if (!it.isNullOrBlank()) updateState(uiState.value.item.copy(barcode = it))
             }
+        }
+    }
+
+    private fun updateState(item: InventoryItem) {
+        viewModelScope.launch(ioDispatcher) {
+            val enableSave =
+                item != initialItem && !(item.code.isEmpty() && item.number.isEmpty() &&
+                        item.auditorium.isEmpty() && item.type.isEmpty() && item.barcode.isEmpty())
+            _uiState.value = IdentificationUiState(item, enableSave)
         }
     }
 }
 
 data class IdentificationUiState(
-    val barcode: String = "",
-    val code: String = "",
-    val number: String = "",
-    val auditorium: String = "",
-    val type: String = ""
+    val item: InventoryItem = InventoryItem(),
+    val enableSave: Boolean = false
 )

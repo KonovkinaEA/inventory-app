@@ -1,9 +1,7 @@
 package com.example.inventoryapp.ui.screens.identification
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,7 +55,7 @@ private fun IdentificationScreenContent(
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        topBar = { IdentificationTopAppBar(enableSave = state.barcode.isNotEmpty(), onUiAction) },
+        topBar = { IdentificationTopAppBar(state.enableSave, onUiAction) },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         Column(
@@ -79,21 +77,29 @@ private fun IdentificationScreenContent(
             MenuElevatedCard {
                 MenuInputField(
                     label = "Штрихкод",
-                    value = state.barcode,
+                    value = state.item.barcode,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) {
                     onUiAction(IdentificationUiAction.UpdateBarcode(it))
                 }
-                MenuInputField(label = "Код", value = state.code) {
+                MenuInputField(
+                    label = "Код",
+                    value = state.item.code,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                ) {
                     onUiAction(IdentificationUiAction.UpdateCode(it))
                 }
-                MenuInputField(label = "Инвентарный номер", value = state.number) {
+                MenuInputField(
+                    label = "Инвентарный номер",
+                    value = state.item.number,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                ) {
                     onUiAction(IdentificationUiAction.UpdateInventoryNumber(it))
                 }
-                MenuInputField(label = "Аудитория", value = state.auditorium) {
+                MenuInputField(label = "Аудитория", value = state.item.auditorium) {
                     onUiAction(IdentificationUiAction.UpdateAuditorium(it))
                 }
-                MenuInputField(label = "Тип предмета", value = state.type) {
+                MenuInputField(label = "Тип предмета", value = state.item.type) {
                     onUiAction(IdentificationUiAction.UpdateType(it))
                 }
             }
@@ -108,8 +114,6 @@ private fun IdentificationScreenPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        Box(modifier = Modifier.background(ExtendedTheme.colors.backPrimary)) {
-            IdentificationScreenContent(IdentificationUiState()) {}
-        }
+        IdentificationScreenContent(IdentificationUiState()) {}
     }
 }
