@@ -78,6 +78,8 @@ private fun IdentificationScreenContent(
                 MenuInputField(
                     label = "Штрихкод",
                     value = state.item.barcode,
+                    confirmButton = true,
+                    confirm = { onUiAction(IdentificationUiAction.SubmitBarcode) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) {
                     onUiAction(IdentificationUiAction.UpdateBarcode(it))
