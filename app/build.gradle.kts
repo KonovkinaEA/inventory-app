@@ -60,10 +60,6 @@ dependencies {
     // barcode scanner
     implementation(libs.gms.code.scanner)
 
-    // camera
-    implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.view)
-
     // hilt
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.hilt.work)

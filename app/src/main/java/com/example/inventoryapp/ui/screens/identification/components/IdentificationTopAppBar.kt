@@ -24,16 +24,20 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.example.inventoryapp.ui.screens.identification.IdentificationUiState
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
-import com.example.inventoryapp.ui.theme.Blue
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
+import com.example.inventoryapp.ui.theme.Red
 import com.example.inventoryapp.ui.theme.ThemeModePreview
 import com.example.inventoryapp.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IdentificationTopAppBar(enableSave: Boolean, onUiAction: (IdentificationUiAction) -> Unit) {
+fun IdentificationTopAppBar(
+    state: IdentificationUiState,
+    onUiAction: (IdentificationUiAction) -> Unit
+) {
     var openAlertDialog by remember { mutableStateOf(false) }
 
     if (openAlertDialog) IdentificationAlertDialog(
@@ -49,7 +53,7 @@ fun IdentificationTopAppBar(enableSave: Boolean, onUiAction: (IdentificationUiAc
         title = {},
         navigationIcon = {
             IconButton(onClick = {
-                if (enableSave) {
+                if (state.enableSave) {
                     openAlertDialog = true
                 } else {
                     onUiAction(IdentificationUiAction.CloseScreen)
@@ -64,24 +68,24 @@ fun IdentificationTopAppBar(enableSave: Boolean, onUiAction: (IdentificationUiAc
         },
         actions = {
             TextButton(
-                onClick = { onUiAction(IdentificationUiAction.SaveItem) },
+                onClick = { onUiAction(IdentificationUiAction.DeleteItem) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Blue,
+                    containerColor = Red,
                     contentColor = White,
                     disabledContainerColor = ExtendedTheme.colors.backSecondary,
                     disabledContentColor = ExtendedTheme.colors.supportSeparator
                 ),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.padding(horizontal = 5.dp),
-                enabled = enableSave,
-                border = if (!enableSave) {
+                enabled = state.enableDelete,
+                border = if (!state.enableDelete) {
                     BorderStroke(width = 1.dp, color = ExtendedTheme.colors.supportSeparator)
                 } else {
                     null
                 }
             ) {
                 Text(
-                    text = "Сохранить",
+                    text = "Удалить",
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -98,6 +102,6 @@ private fun TopAppBarPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        IdentificationTopAppBar(enableSave = true) {}
+        IdentificationTopAppBar(state = IdentificationUiState()) {}
     }
 }

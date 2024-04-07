@@ -107,7 +107,9 @@ object ExtendedTheme {
         @Composable
         get() = ButtonDefaults.buttonColors(
             containerColor = colors.backTertiary,
-            contentColor = colors.labelTertiary
+            contentColor = colors.labelTertiary,
+            disabledContainerColor = colors.backSecondary,
+            disabledContentColor = colors.supportSeparator
         )
     val cardColors: CardColors
         @Composable

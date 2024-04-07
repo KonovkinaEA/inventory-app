@@ -4,6 +4,7 @@ sealed class IdentificationUiAction {
     data object CloseScreen : IdentificationUiAction()
     data object SaveItem : IdentificationUiAction()
     data object DeleteItem : IdentificationUiAction()
+    data object EditMode : IdentificationUiAction()
     data object StartScanning : IdentificationUiAction()
     data object SubmitBarcode : IdentificationUiAction()
 
