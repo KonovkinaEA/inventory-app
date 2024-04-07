@@ -1,5 +1,6 @@
 package com.example.inventoryapp.ui.common
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,13 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -51,13 +53,19 @@ fun MenuElevatedCard(content: @Composable (ColumnScope.() -> Unit)) {
 }
 
 @Composable
-fun MenuCardButton(text: String, onClick: () -> Unit) {
+fun MenuCardButton(
+    text: String,
+    enable: Boolean = true,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth(),
+    onClick: () -> Unit
+) {
     TextButton(
         onClick = { onClick() },
         colors = ExtendedTheme.buttonColors,
         shape = RoundedCornerShape(7.dp),
+        enabled = enable,
         border = BorderStroke(width = 1.dp, color = ExtendedTheme.colors.supportSeparator),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center)
     }
@@ -67,15 +75,20 @@ fun MenuCardButton(text: String, onClick: () -> Unit) {
 fun MenuInputField(
     label: String,
     value: String,
+    readOnly: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     confirmButton: Boolean = false,
     confirm: () -> Unit = {},
     onValueChanged: (String) -> Unit
 ) {
+    val enable = !readOnly || value.isNotEmpty()
+
     Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedTextField(
             shape = RoundedCornerShape(5.dp),
             value = value,
+            readOnly = readOnly,
+            enabled = enable,
             onValueChange = { onValueChanged(it) },
             label = {
                 Text(
@@ -98,19 +111,24 @@ fun MenuInputField(
         )
 
         if (confirmButton) {
-            FilledIconButton(
+            OutlinedIconButton(
                 enabled = value.isNotEmpty(),
                 onClick = { confirm() },
                 colors = IconButtonColors(
                     containerColor = Blue,
                     contentColor = White,
-                    disabledContainerColor = ExtendedTheme.colors.labelDisable,
-                    disabledContentColor = White
+                    disabledContainerColor = Color.Transparent,
+                    disabledContentColor = ExtendedTheme.colors.supportSeparator
                 ),
+                border = if (value.isEmpty()) {
+                    BorderStroke(width = 1.dp, color = ExtendedTheme.colors.supportSeparator)
+                } else {
+                    null
+                },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.padding(start = 10.dp, top = 5.dp)
             ) {
-                Icon(imageVector = Icons.Filled.Done, contentDescription = "Confirm icon")
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Confirm icon")
             }
         }
     }
@@ -124,7 +142,7 @@ private fun MenuCardPreview(
     InventoryAppTheme(darkTheme = darkTheme) {
         MenuElevatedCard {
             MenuCardButton(text = "button") {}
-            MenuInputField(label = "label1", value = "", confirmButton = true) {}
+            MenuInputField(label = "label1", value = "", readOnly = false, confirmButton = true) {}
             MenuInputField(label = "label2", value = "") {}
         }
     }

@@ -24,6 +24,7 @@ class IdentificationViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val initialItem = InventoryItem()
+    private var beforeEditItem = InventoryItem()
 
     private val _uiState = MutableStateFlow(IdentificationUiState(initialItem))
     val uiState = _uiState.asStateFlow()
@@ -33,14 +34,23 @@ class IdentificationViewModel @Inject constructor(
 
     fun onUiAction(action: IdentificationUiAction) {
         when (action) {
-            IdentificationUiAction.CloseScreen -> viewModelScope.launch { closeScreen() }
+            IdentificationUiAction.CloseScreen -> closeScreen()
             IdentificationUiAction.SaveItem -> {
-                closeScreen()
                 viewModelScope.launch(ioDispatcher) { repository.saveItem(_uiState.value.item) }
+                closeScreen()
             }
             IdentificationUiAction.DeleteItem -> {
-                closeScreen()
                 viewModelScope.launch(ioDispatcher) { repository.deleteItem(_uiState.value.item.id) }
+                closeScreen()
+            }
+            IdentificationUiAction.EditMode -> viewModelScope.launch {
+                val editMode = uiState.value.editMode
+                if (!editMode) beforeEditItem = uiState.value.item
+                _uiState.value = uiState.value.copy(
+                    item = beforeEditItem,
+                    editMode = !editMode,
+                    enableSave = enableSave(uiState.value.item, editMode = true)
+                )
             }
             IdentificationUiAction.StartScanning -> startScanning()
             IdentificationUiAction.SubmitBarcode -> viewModelScope.launch(ioDispatcher) {
@@ -75,24 +85,39 @@ class IdentificationViewModel @Inject constructor(
     private fun checkItemExist(barcode: String) {
         repository.getItemByBarcode(barcode)?.let {
             updateState(it)
-        } ?: updateState(uiState.value.item.copy(barcode = barcode))
+            _uiState.value = uiState.value.copy(enableDelete = true)
+        } ?: run {
+            _uiState.value = uiState.value.copy(enableDelete = false)
+            val item = if (_uiState.value.editMode) {
+                uiState.value.item.copy(barcode = barcode)
+            } else {
+                InventoryItem(barcode = barcode)
+            }
+            updateState(item)
+        }
     }
 
     private fun updateState(item: InventoryItem) {
         viewModelScope.launch {
-            val enableSave =
-                item != initialItem && !(item.code.isEmpty() && item.number.isEmpty() &&
-                        item.auditorium.isEmpty() && item.type.isEmpty() && item.barcode.isEmpty())
-            _uiState.value = IdentificationUiState(item, enableSave)
+            _uiState.value = uiState.value.copy(
+                item = item,
+                enableSave = enableSave(item, uiState.value.editMode)
+            )
         }
     }
 
     private fun closeScreen() {
         viewModelScope.launch { _closeScreen.send(true) }
     }
+
+    private fun enableSave(item: InventoryItem, editMode: Boolean) =
+        editMode && item != initialItem && item.barcode.isNotEmpty() && !(item.code.isEmpty() &&
+                item.number.isEmpty() && item.auditorium.isEmpty() && item.type.isEmpty())
 }
 
 data class IdentificationUiState(
     val item: InventoryItem = InventoryItem(),
-    val enableSave: Boolean = false
+    val editMode: Boolean = false,
+    val enableSave: Boolean = false,
+    val enableDelete: Boolean = false
 )

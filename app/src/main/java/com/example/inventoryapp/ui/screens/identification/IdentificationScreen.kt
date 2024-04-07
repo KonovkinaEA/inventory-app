@@ -3,6 +3,7 @@ package com.example.inventoryapp.ui.screens.identification
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,7 +56,7 @@ private fun IdentificationScreenContent(
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        topBar = { IdentificationTopAppBar(state.enableSave, onUiAction) },
+        topBar = { IdentificationTopAppBar(state, onUiAction) },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         Column(
@@ -73,36 +74,56 @@ private fun IdentificationScreenContent(
                 MenuCardButton(text = "Сканировать штрихкод") {
                     onUiAction(IdentificationUiAction.StartScanning)
                 }
-            }
-            MenuElevatedCard {
                 MenuInputField(
                     label = "Штрихкод",
                     value = state.item.barcode,
-                    confirmButton = true,
-                    confirm = { onUiAction(IdentificationUiAction.SubmitBarcode) },
+                    readOnly = false,
+                    confirmButton = !state.editMode,
+                    confirm = {
+                        onUiAction(IdentificationUiAction.SubmitBarcode)
+                        focusManager.clearFocus()
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                ) {
-                    onUiAction(IdentificationUiAction.UpdateBarcode(it))
-                }
+                ) { onUiAction(IdentificationUiAction.UpdateBarcode(it)) }
+            }
+            MenuElevatedCard {
                 MenuInputField(
                     label = "Код",
                     value = state.item.code,
+                    readOnly = !state.editMode,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                ) {
-                    onUiAction(IdentificationUiAction.UpdateCode(it))
-                }
+                ) { onUiAction(IdentificationUiAction.UpdateCode(it)) }
                 MenuInputField(
                     label = "Инвентарный номер",
                     value = state.item.number,
+                    readOnly = !state.editMode,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                ) { onUiAction(IdentificationUiAction.UpdateInventoryNumber(it)) }
+                MenuInputField(
+                    label = "Аудитория",
+                    value = state.item.auditorium,
+                    readOnly = !state.editMode,
+                ) { onUiAction(IdentificationUiAction.UpdateAuditorium(it)) }
+                MenuInputField(
+                    label = "Тип предмета",
+                    value = state.item.type,
+                    readOnly = !state.editMode,
+                ) { onUiAction(IdentificationUiAction.UpdateType(it)) }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    onUiAction(IdentificationUiAction.UpdateInventoryNumber(it))
-                }
-                MenuInputField(label = "Аудитория", value = state.item.auditorium) {
-                    onUiAction(IdentificationUiAction.UpdateAuditorium(it))
-                }
-                MenuInputField(label = "Тип предмета", value = state.item.type) {
-                    onUiAction(IdentificationUiAction.UpdateType(it))
+                    MenuCardButton(
+                        text = if (state.editMode) "Отменить" else "Редактировать",
+                        modifier = Modifier.weight(1f)
+                    ) { onUiAction(IdentificationUiAction.EditMode) }
+                    if (state.editMode) {
+                        MenuCardButton(
+                            text = "Сохранить",
+                            enable = state.enableSave,
+                            modifier = Modifier.weight(1f)
+                        ) { onUiAction(IdentificationUiAction.SaveItem) }
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -116,6 +137,6 @@ private fun IdentificationScreenPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        IdentificationScreenContent(IdentificationUiState()) {}
+        IdentificationScreenContent(IdentificationUiState(editMode = true)) {}
     }
 }
