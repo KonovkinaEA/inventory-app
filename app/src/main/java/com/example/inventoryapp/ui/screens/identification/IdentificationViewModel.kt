@@ -2,6 +2,7 @@ package com.example.inventoryapp.ui.screens.identification
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.inventoryapp.data.Repository
 import com.example.inventoryapp.data.ScannerManager
 import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.di.IoDispatcher
@@ -17,8 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IdentificationViewModel @Inject constructor(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val scannerManager: ScannerManager
+    private val repository: Repository,
+    private val scannerManager: ScannerManager,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val initialItem = InventoryItem()
@@ -31,14 +33,19 @@ class IdentificationViewModel @Inject constructor(
 
     fun onUiAction(action: IdentificationUiAction) {
         when (action) {
-            IdentificationUiAction.CloseScreen -> viewModelScope.launch {
-                _closeScreen.send(true)
+            IdentificationUiAction.CloseScreen -> viewModelScope.launch { closeScreen() }
+            IdentificationUiAction.SaveItem -> {
+                closeScreen()
+                viewModelScope.launch(ioDispatcher) { repository.saveItem(_uiState.value.item) }
             }
-            IdentificationUiAction.SaveData -> {
-                viewModelScope.launch { _closeScreen.send(true) }
-                // TODO: отправка новых данных в репозиторий
+            IdentificationUiAction.DeleteItem -> {
+                closeScreen()
+                viewModelScope.launch(ioDispatcher) { repository.deleteItem(_uiState.value.item.id) }
             }
             IdentificationUiAction.StartScanning -> startScanning()
+            IdentificationUiAction.SubmitBarcode -> viewModelScope.launch(ioDispatcher) {
+                checkItemExist(_uiState.value.item.barcode)
+            }
             is IdentificationUiAction.UpdateBarcode -> {
                 updateState(uiState.value.item.copy(barcode = action.barcode))
             }
@@ -60,18 +67,28 @@ class IdentificationViewModel @Inject constructor(
     private fun startScanning() {
         viewModelScope.launch(ioDispatcher) {
             scannerManager.scanningData.collect {
-                if (!it.isNullOrBlank()) updateState(uiState.value.item.copy(barcode = it))
+                if (!it.isNullOrBlank()) checkItemExist(it)
             }
         }
     }
 
+    private fun checkItemExist(barcode: String) {
+        repository.getItemByBarcode(barcode)?.let {
+            updateState(it)
+        } ?: updateState(uiState.value.item.copy(barcode = barcode))
+    }
+
     private fun updateState(item: InventoryItem) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             val enableSave =
                 item != initialItem && !(item.code.isEmpty() && item.number.isEmpty() &&
                         item.auditorium.isEmpty() && item.type.isEmpty() && item.barcode.isEmpty())
             _uiState.value = IdentificationUiState(item, enableSave)
         }
+    }
+
+    private fun closeScreen() {
+        viewModelScope.launch { _closeScreen.send(true) }
     }
 }
 

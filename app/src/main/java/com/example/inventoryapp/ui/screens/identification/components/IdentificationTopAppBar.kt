@@ -64,7 +64,7 @@ fun IdentificationTopAppBar(enableSave: Boolean, onUiAction: (IdentificationUiAc
         },
         actions = {
             TextButton(
-                onClick = { onUiAction(IdentificationUiAction.SaveData) },
+                onClick = { onUiAction(IdentificationUiAction.SaveItem) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Blue,
                     contentColor = White,
