@@ -27,8 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
-import com.example.inventoryapp.ui.common.MenuInputField
 import com.example.inventoryapp.ui.screens.identification.components.IdentificationTopAppBar
+import com.example.inventoryapp.ui.screens.identification.components.MenuDropdownList
+import com.example.inventoryapp.ui.screens.identification.components.MenuInputField
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
@@ -88,6 +89,11 @@ private fun IdentificationScreenContent(
             }
             MenuElevatedCard {
                 MenuInputField(
+                    label = "Наименование",
+                    value = state.item.name,
+                    readOnly = !state.editMode
+                ) { onUiAction(IdentificationUiAction.UpdateName(it)) }
+                MenuInputField(
                     label = "Код",
                     value = state.item.code,
                     readOnly = !state.editMode,
@@ -104,11 +110,11 @@ private fun IdentificationScreenContent(
                     value = state.item.auditorium,
                     readOnly = !state.editMode,
                 ) { onUiAction(IdentificationUiAction.UpdateAuditorium(it)) }
-                MenuInputField(
-                    label = "Тип предмета",
-                    value = state.item.type,
-                    readOnly = !state.editMode,
+                MenuDropdownList(
+                    selectedOptoin = state.item.type,
+                    editMode = state.editMode
                 ) { onUiAction(IdentificationUiAction.UpdateType(it)) }
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(15.dp)

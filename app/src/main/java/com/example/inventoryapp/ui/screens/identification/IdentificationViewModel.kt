@@ -59,6 +59,9 @@ class IdentificationViewModel @Inject constructor(
             is IdentificationUiAction.UpdateBarcode -> {
                 updateState(uiState.value.item.copy(barcode = action.barcode))
             }
+            is IdentificationUiAction.UpdateName -> {
+                updateState(uiState.value.item.copy(name = action.name))
+            }
             is IdentificationUiAction.UpdateCode -> {
                 updateState(uiState.value.item.copy(code = action.code))
             }
@@ -82,7 +85,7 @@ class IdentificationViewModel @Inject constructor(
         }
     }
 
-    private fun checkItemExist(barcode: String) {
+    private suspend fun checkItemExist(barcode: String) {
         repository.getItemByBarcode(barcode)?.let {
             updateState(it)
             _uiState.value = uiState.value.copy(enableDelete = true)
@@ -111,8 +114,7 @@ class IdentificationViewModel @Inject constructor(
     }
 
     private fun enableSave(item: InventoryItem, editMode: Boolean) =
-        editMode && item != initialItem && item.barcode.isNotEmpty() && !(item.code.isEmpty() &&
-                item.number.isEmpty() && item.auditorium.isEmpty() && item.type.isEmpty())
+        editMode && item != initialItem && item.barcode.isNotEmpty() && item.name.isNotEmpty()
 }
 
 data class IdentificationUiState(
