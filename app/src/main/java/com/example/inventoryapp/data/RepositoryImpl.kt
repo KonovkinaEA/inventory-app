@@ -5,27 +5,44 @@ import com.example.inventoryapp.data.model.InventoryItem
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    val itemDao: ItemDao
+    private val itemDao: ItemDao
 ) : Repository {
 
-    private val items = mutableListOf<InventoryItem>()
+    private var cachedItems: MutableList<InventoryItem> = mutableListOf()
 
-    override suspend fun getAllItems() = items.toList()
+    override suspend fun getAllItems(): List<InventoryItem> {
+        val list = itemDao.getAllItems().map { it.toInventoryItem() }
+        cachedItems = list.toMutableList()
+        return list
+    }
 
-    override suspend fun getItemsInAuditorium(auditorium: String) =
-        items.filter { it.auditorium == auditorium }
+    override suspend fun getItemsInAuditorium(auditorium: String): List<InventoryItem> {
+        val list = itemDao.getItemsInAuditorium(auditorium).map { it.toInventoryItem() }
+        cachedItems = list.toMutableList()
+        return list
+    }
 
-    override suspend fun getItemById(id: String) = items.firstOrNull { it.id == id }
+    override suspend fun getItemById(id: String) =
+        cachedItems.firstOrNull { it.id == id }
+            ?: itemDao.getItemById(id)?.toInventoryItem()?.also { cachedItems.add(it) }
 
     override suspend fun getItemByBarcode(barcode: String) =
-        items.firstOrNull { it.barcode == barcode }
+        cachedItems.firstOrNull { it.barcode == barcode }
+            ?: itemDao.getItemByBarcode(barcode)?.toInventoryItem()?.also { cachedItems.add(it) }
 
     override suspend fun saveItem(item: InventoryItem) {
-        items.find { it.id == item.id }?.let { items.remove(it) }
-        items.add(item)
+        cachedItems = cachedItems.map { if (it.id == item.id) item else it }.toMutableList()
+
+        val dbItem = item.toItemDbEntity()
+        if (itemDao.getItemById(item.id) != null) {
+            itemDao.updateItem(dbItem)
+        } else {
+            itemDao.addItem(dbItem)
+        }
     }
 
     override suspend fun deleteItem(id: String) {
-        getItemById(id)?.let { items.remove(it) }
+        cachedItems.removeAll { it.id == id }
+        itemDao.deleteItem(id)
     }
 }

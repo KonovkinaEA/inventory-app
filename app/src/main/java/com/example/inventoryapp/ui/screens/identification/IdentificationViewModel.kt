@@ -114,8 +114,7 @@ class IdentificationViewModel @Inject constructor(
     }
 
     private fun enableSave(item: InventoryItem, editMode: Boolean) =
-        editMode && item != initialItem && item.barcode.isNotEmpty() && !(item.code.isEmpty() &&
-                item.number.isEmpty() && item.auditorium.isEmpty())
+        editMode && item != initialItem && item.barcode.isNotEmpty() && item.name.isNotEmpty()
 }
 
 data class IdentificationUiState(

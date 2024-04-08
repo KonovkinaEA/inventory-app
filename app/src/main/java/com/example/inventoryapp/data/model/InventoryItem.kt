@@ -1,5 +1,6 @@
 package com.example.inventoryapp.data.model
 
+import com.example.inventoryapp.data.db.entities.ItemDbEntity
 import java.util.UUID
 
 data class InventoryItem(
@@ -10,4 +11,15 @@ data class InventoryItem(
     val number: String = "",
     val auditorium: String = "",
     val type: ItemType = ItemType.DEFAULT
-)
+) {
+
+    fun toItemDbEntity() = ItemDbEntity(
+        id = id,
+        name = name,
+        barcode = barcode,
+        inventoryNum = number,
+        code = code,
+        auditorium = auditorium,
+        typeId = type.id
+    )
+}
