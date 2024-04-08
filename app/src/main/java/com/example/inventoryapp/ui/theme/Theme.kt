@@ -8,6 +8,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -114,4 +116,16 @@ object ExtendedTheme {
     val cardColors: CardColors
         @Composable
         get() = CardDefaults.cardColors(containerColor = colors.backSecondary)
+    val textFieldColors: TextFieldColors
+        @Composable
+        get() = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = colors.labelSecondary,
+            unfocusedTextColor = colors.labelSecondary,
+            focusedBorderColor = colors.supportSeparator,
+            unfocusedBorderColor = colors.supportSeparator,
+            focusedContainerColor = colors.backSecondary,
+            unfocusedContainerColor = colors.backSecondary,
+            focusedLabelColor = colors.labelDisable,
+            unfocusedLabelColor = colors.labelDisable
+        )
 }
