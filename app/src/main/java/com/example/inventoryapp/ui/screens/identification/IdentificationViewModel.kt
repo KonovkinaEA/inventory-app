@@ -23,10 +23,9 @@ class IdentificationViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val initialItem = InventoryItem()
     private var beforeEditItem = InventoryItem()
 
-    private val _uiState = MutableStateFlow(IdentificationUiState(initialItem))
+    private val _uiState = MutableStateFlow(IdentificationUiState(InventoryItem()))
     val uiState = _uiState.asStateFlow()
 
     private val _closeScreen = Channel<Boolean>()
@@ -114,7 +113,7 @@ class IdentificationViewModel @Inject constructor(
     }
 
     private fun enableSave(item: InventoryItem, editMode: Boolean) =
-        editMode && item != initialItem && item.barcode.isNotEmpty() && item.name.isNotEmpty()
+        editMode && item != beforeEditItem && item.barcode.isNotEmpty() && item.name.isNotEmpty()
 }
 
 data class IdentificationUiState(
