@@ -18,12 +18,12 @@ import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
-fun StartScreen(toIdentification: () -> Unit) {
-    StartScreenContent(toIdentification)
+fun StartScreen(toIdentification: () -> Unit, toList: (String) -> Unit) {
+    StartScreenContent(toIdentification, toList)
 }
 
 @Composable
-private fun StartScreenContent(toIdentification: () -> Unit) {
+private fun StartScreenContent(toIdentification: () -> Unit, toList: (String) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
@@ -34,8 +34,11 @@ private fun StartScreenContent(toIdentification: () -> Unit) {
             MenuCardButton(text = "Начать проверку в аудитории") {}
         }
         MenuElevatedCard {
-            MenuCardButton(text = "Получить список предметов в аудитории") {}
-            MenuCardButton(text = "Получить список всех предметов") {}
+            MenuCardButton(
+                text = "Получить список предметов в аудитории",
+                onClick = { toList("789a") } // TODO: добавить диалог с выбором аудитории
+            )
+            MenuCardButton(text = "Получить список всех предметов", onClick = { toList("") })
         }
     }
 }
@@ -47,7 +50,7 @@ private fun StartScreenPreview(
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
         Box(modifier = Modifier.background(ExtendedTheme.colors.backPrimary)) {
-            StartScreenContent {}
+            StartScreenContent(toIdentification = {}) {}
         }
     }
 }

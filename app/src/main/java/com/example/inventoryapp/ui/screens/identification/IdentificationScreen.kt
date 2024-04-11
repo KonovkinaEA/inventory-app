@@ -37,13 +37,13 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
 fun IdentificationScreen(
-    onClose: () -> Unit,
+    closeScreen: () -> Unit,
     viewModel: IdentificationViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.closeScreen.collect { if (it) onClose() }
+        viewModel.closeScreen.collect { if (it) closeScreen() }
     }
 
     IdentificationScreenContent(state, viewModel::onUiAction)
