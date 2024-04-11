@@ -54,6 +54,7 @@ fun MenuInputField(
                 )
             },
             colors = ExtendedTheme.textFieldColors,
+            singleLine = true,
             modifier = Modifier.weight(1f),
             keyboardOptions = keyboardOptions
         )
