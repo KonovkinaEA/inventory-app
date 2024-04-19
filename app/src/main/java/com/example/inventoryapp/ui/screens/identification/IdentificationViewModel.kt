@@ -1,11 +1,13 @@
 package com.example.inventoryapp.ui.screens.identification
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventoryapp.data.Repository
 import com.example.inventoryapp.data.ScannerManager
 import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.di.IoDispatcher
+import com.example.inventoryapp.ui.navigation.Identification
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,7 +22,8 @@ import javax.inject.Inject
 class IdentificationViewModel @Inject constructor(
     private val repository: Repository,
     private val scannerManager: ScannerManager,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private var beforeEditItem = InventoryItem()
@@ -30,6 +33,17 @@ class IdentificationViewModel @Inject constructor(
 
     private val _closeScreen = Channel<Boolean>()
     val closeScreen = _closeScreen.receiveAsFlow()
+
+    init {
+        viewModelScope.launch(ioDispatcher) {
+            savedStateHandle.get<String>(Identification.id)?.let { id ->
+                repository.getItemById(id)
+            }?.let { item ->
+                updateState(item)
+                _uiState.value = uiState.value.copy(enableDelete = true)
+            }
+        }
+    }
 
     fun onUiAction(action: IdentificationUiAction) {
         when (action) {

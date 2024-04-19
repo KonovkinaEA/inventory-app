@@ -23,6 +23,7 @@ import com.example.inventoryapp.ui.common.MenuElevatedCard
 import com.example.inventoryapp.ui.screens.list.components.ListTopAppBar
 import com.example.inventoryapp.ui.screens.list.components.MenuTitle
 import com.example.inventoryapp.ui.screens.list.model.ListUiAction
+import com.example.inventoryapp.ui.screens.list.model.ListUiEvent
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
@@ -36,7 +37,12 @@ fun ListScreen(
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.closeScreen.collect { if (it) closeScreen() }
+        viewModel.uiEvent.collect {
+            when (it) {
+                is ListUiEvent.OpenItem -> openItem(it.id)
+                ListUiEvent.CloseScreen -> closeScreen()
+            }
+        }
     }
 
     ListScreenContent(state, viewModel::onUiAction)
@@ -55,9 +61,9 @@ private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> 
         ) {
             item { Spacer(modifier = Modifier.height(10.dp)) }
             items(state.list) {
-                MenuElevatedCard {
-                    MenuTitle(text = it.name)
-                }
+                MenuElevatedCard(
+                    onClick = { onUiAction(ListUiAction.OpenItem(it.id)) }
+                ) { MenuTitle(text = it.name) }
                 Spacer(modifier = Modifier.height(10.dp))
             }
         }

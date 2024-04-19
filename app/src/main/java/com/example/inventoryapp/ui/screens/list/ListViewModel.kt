@@ -8,6 +8,7 @@ import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.di.IoDispatcher
 import com.example.inventoryapp.ui.navigation.ItemsList
 import com.example.inventoryapp.ui.screens.list.model.ListUiAction
+import com.example.inventoryapp.ui.screens.list.model.ListUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -27,8 +28,8 @@ class ListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ListUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _closeScreen = Channel<Boolean>()
-    val closeScreen = _closeScreen.receiveAsFlow()
+    private val _uiEvent = Channel<ListUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         viewModelScope.launch(ioDispatcher) {
@@ -42,7 +43,12 @@ class ListViewModel @Inject constructor(
 
     fun onUiAction(action: ListUiAction) {
         when (action) {
-            ListUiAction.CloseScreen -> viewModelScope.launch { _closeScreen.send(true) }
+            is ListUiAction.OpenItem -> viewModelScope.launch {
+                _uiEvent.send(ListUiEvent.OpenItem(action.id))
+            }
+            ListUiAction.CloseScreen -> viewModelScope.launch {
+                _uiEvent.send(ListUiEvent.CloseScreen)
+            }
         }
     }
 }
