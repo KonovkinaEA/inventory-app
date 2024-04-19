@@ -9,7 +9,18 @@ object Start : Destination {
 }
 
 object Identification : Destination {
+    const val id = "id"
     override val route = "identification"
+
+    const val routeWithArgs = "identification/{id}"
+
+    val arguments = listOf(
+        navArgument(id) {
+            type = NavType.StringType
+        }
+    )
+
+    fun navToOrderWithArgs(id: String = "") = "${route}/$id"
 }
 
 object ItemsList : Destination {

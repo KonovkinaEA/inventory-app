@@ -31,11 +31,18 @@ fun AppNavHost(navController: NavHostController) {
         composable(Identification.route) {
             IdentificationScreen(closeScreen = { returnToPrevScreen(navController) })
         }
+        composable(Identification.routeWithArgs, arguments = Identification.arguments) {
+            IdentificationScreen(closeScreen = { returnToPrevScreen(navController) })
+        }
         composable(ItemsList.route) {
-            ListScreen(closeScreen = { returnToPrevScreen(navController) })
+            ListScreen(
+                closeScreen = { returnToPrevScreen(navController) },
+                openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
         }
         composable(ItemsList.routeWithArgs, arguments = ItemsList.arguments) {
-            ListScreen(closeScreen = { returnToPrevScreen(navController) })
+            ListScreen(
+                closeScreen = { returnToPrevScreen(navController) },
+                openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
         }
     }
 }

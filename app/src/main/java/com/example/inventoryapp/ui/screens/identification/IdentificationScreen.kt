@@ -109,6 +109,7 @@ private fun IdentificationScreenContent(
                     label = "Аудитория",
                     value = state.item.auditorium,
                     readOnly = !state.editMode,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii)
                 ) { onUiAction(IdentificationUiAction.UpdateAuditorium(it)) }
                 MenuDropdownList(
                     selectedOptoin = state.item.type,

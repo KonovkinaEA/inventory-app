@@ -28,7 +28,11 @@ import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
-fun ListScreen(closeScreen: () -> Unit, viewModel: ListViewModel = hiltViewModel()) {
+fun ListScreen(
+    closeScreen: () -> Unit,
+    openItem: (String) -> Unit,
+    viewModel: ListViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
