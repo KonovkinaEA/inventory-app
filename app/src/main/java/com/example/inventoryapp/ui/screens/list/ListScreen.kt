@@ -54,7 +54,7 @@ fun ListScreen(
 @Composable
 private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> Unit) {
     Scaffold(
-        topBar = { ListTopAppBar(onUiAction) },
+        topBar = { ListTopAppBar(state.auditorium, onUiAction) },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         LazyColumn(

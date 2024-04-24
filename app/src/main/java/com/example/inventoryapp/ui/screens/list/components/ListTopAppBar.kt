@@ -2,10 +2,12 @@ package com.example.inventoryapp.ui.screens.list.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,10 +22,10 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListTopAppBar(onUiAction: (ListUiAction) -> Unit) {
-    TopAppBar(
+fun ListTopAppBar(auditorium: String, onUiAction: (ListUiAction) -> Unit) {
+    CenterAlignedTopAppBar(
         modifier = Modifier.shadow(10.dp),
-        title = {},
+        title = { Text(text = auditorium, style = MaterialTheme.typography.titleLarge) },
         navigationIcon = {
             IconButton(onClick = { onUiAction(ListUiAction.CloseScreen) }) {
                 Icon(
@@ -34,7 +36,8 @@ fun ListTopAppBar(onUiAction: (ListUiAction) -> Unit) {
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = ExtendedTheme.colors.backSecondary
+            containerColor = ExtendedTheme.colors.backSecondary,
+            titleContentColor = ExtendedTheme.colors.labelPrimary
         )
     )
 }
@@ -45,6 +48,6 @@ private fun TopAppBarPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        ListTopAppBar {}
+        ListTopAppBar(auditorium = "123a") {}
     }
 }
