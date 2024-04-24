@@ -30,11 +30,14 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
 fun ListScreen(
+    reload: Boolean,
     closeScreen: () -> Unit,
     openItem: (String) -> Unit,
     viewModel: ListViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+
+    if (reload) viewModel.loadData()
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {

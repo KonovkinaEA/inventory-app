@@ -19,7 +19,7 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 @Composable
 fun IdentificationAlertDialog(
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
+    onConfirmation: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = { onDismissRequest() },

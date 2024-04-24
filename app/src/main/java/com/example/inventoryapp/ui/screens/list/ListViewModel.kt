@@ -32,6 +32,10 @@ class ListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        loadData()
+    }
+
+    fun loadData() {
         viewModelScope.launch(ioDispatcher) {
             val list = savedStateHandle.get<String>(ItemsList.id)?.let {
                 _uiState.value = ListUiState(auditorium = it)

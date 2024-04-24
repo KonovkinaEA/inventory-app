@@ -2,6 +2,7 @@ package com.example.inventoryapp.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,20 +35,25 @@ fun AppNavHost(navController: NavHostController) {
         composable(Identification.routeWithArgs, arguments = Identification.arguments) {
             IdentificationScreen(closeScreen = { returnToPrevScreen(navController) })
         }
-        composable(ItemsList.route) {
-            ListScreen(
-                closeScreen = { returnToPrevScreen(navController) },
-                openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
-        }
+        composable(ItemsList.route) { NavListScreen(navController, it) }
         composable(ItemsList.routeWithArgs, arguments = ItemsList.arguments) {
-            ListScreen(
-                closeScreen = { returnToPrevScreen(navController) },
-                openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
+            NavListScreen(navController, it)
         }
     }
 }
 
+@Composable
+private fun NavListScreen(navController: NavHostController, entry: NavBackStackEntry) {
+    val reload = entry.savedStateHandle.get<Boolean>("reload") ?: false
+    ListScreen(
+        reload = reload,
+        closeScreen = { returnToPrevScreen(navController) },
+        openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
+}
+
 private fun returnToPrevScreen(navController: NavHostController) {
     navController.previousBackStackEntry
+        ?.savedStateHandle
+        ?.set("reload", true)
     navController.popBackStack()
 }
