@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
+import com.example.inventoryapp.ui.common.MenuInputField
 import com.example.inventoryapp.ui.screens.identification.components.IdentificationTopAppBar
 import com.example.inventoryapp.ui.screens.identification.components.MenuDropdownList
-import com.example.inventoryapp.ui.screens.identification.components.MenuInputField
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme

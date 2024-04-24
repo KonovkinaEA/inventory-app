@@ -62,7 +62,7 @@ private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> 
                 .fillMaxWidth()
                 .padding(paddingValues)
         ) {
-            item { Spacer(modifier = Modifier.height(10.dp)) }
+            item { Spacer(modifier = Modifier.height(20.dp)) }
             items(state.list) {
                 MenuElevatedCard(
                     onClick = { onUiAction(ListUiAction.OpenItem(it.id)) }

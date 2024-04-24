@@ -1,4 +1,4 @@
-package com.example.inventoryapp.ui.screens.identification.components
+package com.example.inventoryapp.ui.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
