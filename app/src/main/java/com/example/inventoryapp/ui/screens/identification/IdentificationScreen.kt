@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
+import com.example.inventoryapp.ui.common.MenuInputField
 import com.example.inventoryapp.ui.screens.identification.components.IdentificationTopAppBar
 import com.example.inventoryapp.ui.screens.identification.components.MenuDropdownList
-import com.example.inventoryapp.ui.screens.identification.components.MenuInputField
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
@@ -37,13 +37,13 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
 fun IdentificationScreen(
-    onClose: () -> Unit,
+    closeScreen: () -> Unit,
     viewModel: IdentificationViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.closeScreen.collect { if (it) onClose() }
+        viewModel.closeScreen.collect { if (it) closeScreen() }
     }
 
     IdentificationScreenContent(state, viewModel::onUiAction)
@@ -108,7 +108,7 @@ private fun IdentificationScreenContent(
                 MenuInputField(
                     label = "Аудитория",
                     value = state.item.auditorium,
-                    readOnly = !state.editMode,
+                    readOnly = !state.editMode
                 ) { onUiAction(IdentificationUiAction.UpdateAuditorium(it)) }
                 MenuDropdownList(
                     selectedOptoin = state.item.type,

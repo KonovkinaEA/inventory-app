@@ -6,36 +6,85 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
+import com.example.inventoryapp.ui.screens.start.components.AuditoriumDialog
+import com.example.inventoryapp.ui.screens.start.model.StartUiAction
+import com.example.inventoryapp.ui.screens.start.model.StartUiEvent
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
-fun StartScreen(toIdentification: () -> Unit) {
-    StartScreenContent(toIdentification)
+fun StartScreen(
+    toIdentification: () -> Unit,
+    toList: (String) -> Unit,
+    viewModel: StartViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect {
+            when (it) {
+                StartUiEvent.OpenIdentification -> toIdentification()
+                is StartUiEvent.OpenList -> toList(it.auditorium)
+            }
+        }
+    }
+
+    StartScreenContent(state, viewModel::onUiAction)
 }
 
 @Composable
-private fun StartScreenContent(toIdentification: () -> Unit) {
+private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) -> Unit) {
+    var openAuditoriumDialog by remember { mutableStateOf(false) }
+
+    if (openAuditoriumDialog) {
+        AuditoriumDialog(
+            state.auditorium,
+            onValueChanged = { onUiAction(StartUiAction.UpdateAuditorium(it)) },
+            onDismissRequest = {
+                openAuditoriumDialog = false
+                onUiAction(StartUiAction.ClearAuditorium)
+            },
+            onConfirmation = {
+                openAuditoriumDialog = false
+                onUiAction(StartUiAction.OpenAuditoriumList)
+                onUiAction(StartUiAction.ClearAuditorium)
+            }
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         modifier = Modifier.fillMaxSize()
     ) {
         MenuElevatedCard {
-            MenuCardButton(text = "Идентифицировать предмет", onClick = toIdentification)
+            MenuCardButton(text = "Идентифицировать предмет") {
+                onUiAction(StartUiAction.OpenIdentification)
+            }
             MenuCardButton(text = "Начать проверку в аудитории") {}
         }
         MenuElevatedCard {
-            MenuCardButton(text = "Получить список предметов в аудитории") {}
-            MenuCardButton(text = "Получить список всех предметов") {}
+            MenuCardButton(text = "Получить список предметов в аудитории") {
+                openAuditoriumDialog = true
+            }
+            MenuCardButton(text = "Получить список всех предметов") {
+                onUiAction(StartUiAction.OpenList)
+            }
         }
     }
 }
@@ -47,7 +96,7 @@ private fun StartScreenPreview(
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
         Box(modifier = Modifier.background(ExtendedTheme.colors.backPrimary)) {
-            StartScreenContent {}
+            StartScreenContent(StartUiState()) {}
         }
     }
 }

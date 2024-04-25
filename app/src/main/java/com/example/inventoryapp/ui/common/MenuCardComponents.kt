@@ -41,6 +41,23 @@ fun MenuElevatedCard(content: @Composable (ColumnScope.() -> Unit)) {
 }
 
 @Composable
+fun MenuElevatedCard(onClick: () -> Unit, content: @Composable (ColumnScope.() -> Unit)) {
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        colors = ExtendedTheme.cardColors,
+        modifier = Modifier.padding(horizontal = 20.dp),
+        onClick = { onClick() }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(15.dp, Alignment.CenterVertically),
+            modifier = Modifier.padding(20.dp),
+            content = content
+        )
+    }
+}
+
+@Composable
 fun MenuCardButton(
     text: String,
     enable: Boolean = true,
