@@ -39,7 +39,7 @@ fun StartScreen(
         viewModel.uiEvent.collect {
             when (it) {
                 StartUiEvent.OpenIdentification -> toIdentification()
-                is StartUiEvent.OpenList -> toList(it.auditorium)
+                is StartUiEvent.OpenList -> toList(it.location)
             }
         }
     }
@@ -53,16 +53,16 @@ private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) 
 
     if (openAuditoriumDialog) {
         AuditoriumDialog(
-            state.auditorium,
-            onValueChanged = { onUiAction(StartUiAction.UpdateAuditorium(it)) },
+            state.location,
+            onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
             onDismissRequest = {
                 openAuditoriumDialog = false
-                onUiAction(StartUiAction.ClearAuditorium)
+                onUiAction(StartUiAction.ClearLocation)
             },
             onConfirmation = {
                 openAuditoriumDialog = false
-                onUiAction(StartUiAction.OpenAuditoriumList)
-                onUiAction(StartUiAction.ClearAuditorium)
+                onUiAction(StartUiAction.OpenLocationList)
+                onUiAction(StartUiAction.ClearLocation)
             }
         )
     }
@@ -76,10 +76,10 @@ private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) 
             MenuCardButton(text = "Идентифицировать предмет") {
                 onUiAction(StartUiAction.OpenIdentification)
             }
-            MenuCardButton(text = "Начать проверку в аудитории") {}
+            MenuCardButton(text = "Начать проверку в помещении") {}
         }
         MenuElevatedCard {
-            MenuCardButton(text = "Получить список предметов в аудитории") {
+            MenuCardButton(text = "Получить список предметов в помещении") {
                 openAuditoriumDialog = true
             }
             MenuCardButton(text = "Получить список всех предметов") {

@@ -11,13 +11,13 @@ class RepositoryImpl @Inject constructor(
     private var cachedItems: MutableList<InventoryItem> = mutableListOf()
 
     override suspend fun getAllItems(): List<InventoryItem> {
-        val list = itemDao.getAllItems().map { it.toInventoryItem() }
+        val list = itemDao.findAllItems().map { it.toInventoryItem() }
         cachedItems = list.toMutableList()
         return list
     }
 
     override suspend fun getItemsInAuditorium(auditorium: String): List<InventoryItem> {
-        val list = itemDao.getItemsInAuditorium(auditorium).map { it.toInventoryItem() }
+        val list = itemDao.findItemsByLocation(auditorium).map { it.toInventoryItem() }
         cachedItems = list.toMutableList()
         return list
     }

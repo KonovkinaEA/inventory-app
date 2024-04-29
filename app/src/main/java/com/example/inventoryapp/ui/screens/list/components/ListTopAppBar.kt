@@ -22,10 +22,10 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListTopAppBar(auditorium: String, onUiAction: (ListUiAction) -> Unit) {
+fun ListTopAppBar(location: String, onUiAction: (ListUiAction) -> Unit) {
     CenterAlignedTopAppBar(
         modifier = Modifier.shadow(10.dp),
-        title = { Text(text = auditorium, style = MaterialTheme.typography.titleLarge) },
+        title = { Text(text = location, style = MaterialTheme.typography.titleLarge) },
         navigationIcon = {
             IconButton(onClick = { onUiAction(ListUiAction.CloseScreen) }) {
                 Icon(
@@ -48,6 +48,6 @@ private fun TopAppBarPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        ListTopAppBar(auditorium = "123a") {}
+        ListTopAppBar(location = "123a") {}
     }
 }

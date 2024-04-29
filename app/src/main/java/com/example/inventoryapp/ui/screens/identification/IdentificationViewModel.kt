@@ -79,13 +79,10 @@ class IdentificationViewModel @Inject constructor(
                 updateState(uiState.value.item.copy(code = action.code))
             }
             is IdentificationUiAction.UpdateInventoryNumber -> {
-                updateState(uiState.value.item.copy(number = action.number))
+                updateState(uiState.value.item.copy(inventoryNum = action.inventoryNum))
             }
-            is IdentificationUiAction.UpdateAuditorium -> {
-                updateState(uiState.value.item.copy(auditorium = action.auditorium))
-            }
-            is IdentificationUiAction.UpdateType -> {
-                updateState(uiState.value.item.copy(type = action.type))
+            is IdentificationUiAction.UpdateLocation -> {
+                updateState(uiState.value.item.copy(location = action.location))
             }
         }
     }

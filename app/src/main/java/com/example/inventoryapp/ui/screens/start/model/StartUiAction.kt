@@ -3,8 +3,8 @@ package com.example.inventoryapp.ui.screens.start.model
 sealed class StartUiAction {
     data object OpenIdentification : StartUiAction()
     data object OpenList : StartUiAction()
-    data object OpenAuditoriumList : StartUiAction()
-    data object ClearAuditorium : StartUiAction()
+    data object OpenLocationList : StartUiAction()
+    data object ClearLocation : StartUiAction()
 
-    data class UpdateAuditorium(val auditorium: String) : StartUiAction()
+    data class UpdateLocation(val location: String) : StartUiAction()
 }

@@ -54,7 +54,7 @@ fun ListScreen(
 @Composable
 private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> Unit) {
     Scaffold(
-        topBar = { ListTopAppBar(state.auditorium, onUiAction) },
+        topBar = { ListTopAppBar(state.location, onUiAction) },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         LazyColumn(
@@ -64,10 +64,12 @@ private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> 
         ) {
             item { Spacer(modifier = Modifier.height(20.dp)) }
             items(state.list) {
-                MenuElevatedCard(
-                    onClick = { onUiAction(ListUiAction.OpenItem(it.id)) }
-                ) { MenuTitle(text = it.name) }
-                Spacer(modifier = Modifier.height(10.dp))
+                if (it.name != null) {
+                    MenuElevatedCard(
+                        onClick = { onUiAction(ListUiAction.OpenItem(it.id)) }
+                    ) { MenuTitle(text = it.name) }
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
         }
     }
