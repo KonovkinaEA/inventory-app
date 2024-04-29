@@ -24,7 +24,7 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
 fun AuditoriumDialog(
-    auditorium: String,
+    location: String,
     onValueChanged: (String) -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
@@ -48,7 +48,7 @@ fun AuditoriumDialog(
                     .fillMaxSize()
                     .padding(20.dp)
             ) {
-                MenuInputField(label = "Аудитория", value = auditorium, readOnly = false) {
+                MenuInputField(label = "Местоположение", value = location, readOnly = false) {
                     onValueChanged(it)
                 }
                 MenuCardButton(text = "Найти") { onConfirmation() }
@@ -63,6 +63,6 @@ private fun AuditoriumDialogPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        AuditoriumDialog(auditorium = "", onValueChanged = {}, onDismissRequest = {}) {}
+        AuditoriumDialog(location = "", onValueChanged = {}, onDismissRequest = {}) {}
     }
 }

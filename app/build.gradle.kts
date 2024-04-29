@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.inventoryapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -83,6 +83,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons)
     implementation(libs.androidx.work.runtime)
+
+    // custom dialogs
+    implementation(libs.maxkeppeler.dialogs.core)
+    implementation(libs.maxkeppeler.dialogs.calendar)
 
     // test
     testImplementation(libs.junit)

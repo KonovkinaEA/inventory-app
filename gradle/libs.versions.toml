@@ -1,21 +1,22 @@
 [versions]
-agp = "8.3.1"
+agp = "8.3.2"
 kotlin = "1.9.0"
 hilt = "2.49"
 ktxSerialization = "1.6.10"
-coreKtx = "1.12.0"
+coreKtx = "1.13.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-compose = "1.6.5"
-composeBom = "2024.04.00"
+activityCompose = "1.9.0"
+compose = "1.6.6"
+composeBom = "2024.04.01"
 codeScanner = "16.1.0"
 hiltCompiler = "2.47"
 androidxHilt = "1.2.0"
 workRuntime = "2.9.0"
 room = "2.6.1"
+maxkeppeler = "1.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,8 @@ androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", vers
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+maxkeppeler-dialogs-core = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "core", version.ref = "maxkeppeler" }
+maxkeppeler-dialogs-calendar = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "calendar", version.ref = "maxkeppeler" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

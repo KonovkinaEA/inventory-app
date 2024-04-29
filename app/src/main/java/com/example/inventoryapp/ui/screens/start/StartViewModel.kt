@@ -24,13 +24,13 @@ class StartViewModel @Inject constructor() : ViewModel() {
     fun onUiAction(action: StartUiAction) = viewModelScope.launch {
         when (action) {
             StartUiAction.OpenIdentification -> _uiEvent.send(StartUiEvent.OpenIdentification)
-            StartUiAction.OpenList -> _uiEvent.send(StartUiEvent.OpenList(auditorium = ""))
-            StartUiAction.OpenAuditoriumList ->
-                _uiEvent.send(StartUiEvent.OpenList(_uiState.value.auditorium))
-            StartUiAction.ClearAuditorium -> _uiState.value = StartUiState()
-            is StartUiAction.UpdateAuditorium -> _uiState.value = StartUiState(action.auditorium)
+            StartUiAction.OpenList -> _uiEvent.send(StartUiEvent.OpenList(location = ""))
+            StartUiAction.OpenLocationList ->
+                _uiEvent.send(StartUiEvent.OpenList(_uiState.value.location))
+            StartUiAction.ClearLocation -> _uiState.value = StartUiState()
+            is StartUiAction.UpdateLocation -> _uiState.value = StartUiState(action.location)
         }
     }
 }
 
-data class StartUiState(val auditorium: String = "")
+data class StartUiState(val location: String = "")

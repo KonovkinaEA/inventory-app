@@ -1,7 +1,5 @@
 package com.example.inventoryapp.ui.screens.identification.model
 
-import com.example.inventoryapp.data.model.ItemType
-
 sealed class IdentificationUiAction {
     data object CloseScreen : IdentificationUiAction()
     data object SaveItem : IdentificationUiAction()
@@ -9,11 +7,16 @@ sealed class IdentificationUiAction {
     data object EditMode : IdentificationUiAction()
     data object StartScanning : IdentificationUiAction()
     data object SubmitBarcode : IdentificationUiAction()
+    data object SubmitCode : IdentificationUiAction()
+    data object SubmitInventoryNum : IdentificationUiAction()
 
     data class UpdateBarcode(val barcode: String) : IdentificationUiAction()
-    data class UpdateName(val name: String) : IdentificationUiAction()
     data class UpdateCode(val code: String) : IdentificationUiAction()
-    data class UpdateInventoryNumber(val number: String) : IdentificationUiAction()
-    data class UpdateAuditorium(val auditorium: String) : IdentificationUiAction()
-    data class UpdateType(val type: ItemType) : IdentificationUiAction()
+    data class UpdateInventoryNumber(val inventoryNum: String) : IdentificationUiAction()
+    data class UpdateName(val name: String) : IdentificationUiAction()
+    data class UpdateLocation(val location: String) : IdentificationUiAction()
+    data class UpdateManufactureDate(val date: Long?) : IdentificationUiAction()
+    data class UpdateCount(val count: Int?) : IdentificationUiAction()
+    data class UpdateFactoryNum(val factoryNum: String) : IdentificationUiAction()
+    data class UpdateBuilding(val building: String) : IdentificationUiAction()
 }

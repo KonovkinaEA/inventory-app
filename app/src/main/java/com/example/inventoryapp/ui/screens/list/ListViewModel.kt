@@ -38,8 +38,8 @@ class ListViewModel @Inject constructor(
     fun loadData() {
         viewModelScope.launch(ioDispatcher) {
             val list = savedStateHandle.get<String>(ItemsList.id)?.let {
-                _uiState.value = ListUiState(auditorium = it)
-                repository.getItemsInAuditorium(it)
+                _uiState.value = ListUiState(location = it)
+                repository.getItemsByLocation(it)
             } ?: repository.getAllItems()
             _uiState.value = uiState.value.copy(list = list)
         }
@@ -58,6 +58,6 @@ class ListViewModel @Inject constructor(
 }
 
 data class ListUiState(
-    val auditorium: String = "",
+    val location: String = "",
     val list: List<InventoryItem> = emptyList()
 )

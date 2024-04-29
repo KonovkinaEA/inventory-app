@@ -5,14 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.inventoryapp.data.db.entities.ItemDbEntity
-import com.example.inventoryapp.data.db.entities.ItemTypesDbEntity
 
 @Database(
-    version = 1,
-    entities = [
-        ItemTypesDbEntity::class,
-        ItemDbEntity::class
-    ]
+    version = 3,
+    entities = [ItemDbEntity::class]
 )
 abstract class AppDatabase : RoomDatabase() {
 
