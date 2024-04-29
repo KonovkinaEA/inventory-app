@@ -28,8 +28,7 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 fun MenuElevatedCard(content: @Composable (ColumnScope.() -> Unit)) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        colors = ExtendedTheme.cardColors,
-        modifier = Modifier.padding(horizontal = 20.dp)
+        colors = ExtendedTheme.cardColors
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -13,11 +13,11 @@ data class ItemDbEntity(
     val code: String,
     @ColumnInfo(name = "inventory_num") val inventoryNum: String,
     val barcode: String,
-    @ColumnInfo(name = "manufacture_date") val manufactureDate: Long,
+    @ColumnInfo(name = "manufacture_date") val manufactureDate: Long?,
     @ColumnInfo(name = "factory_num") val factoryNum: String,
     val building: String,
     val location: String,
-    val count: Int,
+    val count: Int?,
     @ColumnInfo(name = "changed_at") val changedAt: Long,
     @ColumnInfo(name = "last_updated_by") val lastUpdatedBy: String,
     val revision: Long

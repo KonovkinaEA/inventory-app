@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.inventoryapp.data.db.entities.ItemDbEntity
 
 @Database(
-    version = 2,
+    version = 3,
     entities = [ItemDbEntity::class]
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -33,6 +33,7 @@ import com.example.inventoryapp.ui.screens.identification.model.IdentificationUi
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
+import com.example.inventoryapp.util.millisToDate
 
 @Composable
 fun IdentificationScreen(
@@ -78,37 +79,69 @@ private fun IdentificationScreenContent(
                     label = "Штрихкод",
                     value = state.item.barcode,
                     readOnly = false,
-                    confirmButton = !state.editMode,
+                    confirmButton = true,
                     confirm = {
                         onUiAction(IdentificationUiAction.SubmitBarcode)
                         focusManager.clearFocus()
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) { onUiAction(IdentificationUiAction.UpdateBarcode(it)) }
-            }
-            MenuElevatedCard {
-                MenuInputField(
-                    label = "Наименование",
-                    value = state.item.name,
-                    readOnly = !state.editMode
-                ) { onUiAction(IdentificationUiAction.UpdateName(it)) }
                 MenuInputField(
                     label = "Код",
                     value = state.item.code,
-                    readOnly = !state.editMode,
+                    readOnly = false,
+                    confirmButton = true,
+                    confirm = {
+                        onUiAction(IdentificationUiAction.SubmitCode)
+                        focusManager.clearFocus()
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) { onUiAction(IdentificationUiAction.UpdateCode(it)) }
                 MenuInputField(
                     label = "Инвентарный номер",
                     value = state.item.inventoryNum,
-                    readOnly = !state.editMode,
+                    readOnly = false,
+                    confirmButton = true,
+                    confirm = {
+                        onUiAction(IdentificationUiAction.SubmitInventoryNum)
+                        focusManager.clearFocus()
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) { onUiAction(IdentificationUiAction.UpdateInventoryNumber(it)) }
-                MenuInputField(
-                    label = "Помещение",
-                    value = state.item.location,
-                    readOnly = !state.editMode
-                ) { onUiAction(IdentificationUiAction.UpdateLocation(it)) }
+            }
+            MenuElevatedCard {
+                if (state.editMode || state.enableDelete) {
+                    MenuInputField(
+                        label = "Наименование",
+                        value = state.item.name,
+                        readOnly = !state.editMode
+                    ) { onUiAction(IdentificationUiAction.UpdateName(it)) }
+                    MenuInputField(
+                        label = "Помещение",
+                        value = state.item.location,
+                        readOnly = !state.editMode
+                    ) { onUiAction(IdentificationUiAction.UpdateLocation(it)) }
+                    MenuInputField(
+                        label = "Количество",
+                        value = "${state.item.count ?: ""}",
+                        readOnly = !state.editMode
+                    ) { onUiAction(IdentificationUiAction.UpdateCount(it.toIntOrNull())) }
+                    MenuInputField(
+                        label = "Дата выпуска",
+                        value = state.item.manufactureDate?.millisToDate() ?: "",
+                        readOnly = true
+                    ) { /* onUiAction(IdentificationUiAction.UpdateManufactureDate(it)) TODO */ }
+                    MenuInputField(
+                        label = "Заводской номер",
+                        value = state.item.factoryNum,
+                        readOnly = !state.editMode
+                    ) { onUiAction(IdentificationUiAction.UpdateFactoryNum(it)) }
+                    MenuInputField(
+                        label = "Корпус",
+                        value = state.item.building,
+                        readOnly = !state.editMode
+                    ) { onUiAction(IdentificationUiAction.UpdateBuilding(it)) }
+                }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

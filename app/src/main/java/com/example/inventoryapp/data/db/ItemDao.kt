@@ -18,23 +18,9 @@ interface ItemDao {
     @Query(
         "SELECT item.id, name, code, inventory_num, barcode, manufacture_date, factory_num," +
                 "building, location, count, changed_at, last_updated_by, revision FROM item\n" +
-                "WHERE item.name = :name"
-    )
-    fun findItemsByName(name: String): List<ItemDbEntity>
-
-    @Query(
-        "SELECT item.id, name, code, inventory_num, barcode, manufacture_date, factory_num," +
-                "building, location, count, changed_at, last_updated_by, revision FROM item\n" +
                 "WHERE item.location = :location"
     )
     fun findItemsByLocation(location: String): List<ItemDbEntity>
-
-    @Query(
-        "SELECT item.id, name, code, inventory_num, barcode, manufacture_date, factory_num," +
-                "building, location, count, changed_at, last_updated_by, revision FROM item\n" +
-                "WHERE item.last_updated_by = :lastUpdatedBy"
-    )
-    fun findItemsByLastUpdatedBy(lastUpdatedBy: String): List<ItemDbEntity>
 
     @Query(
         "SELECT item.id, name, code, inventory_num, barcode, manufacture_date, factory_num," +

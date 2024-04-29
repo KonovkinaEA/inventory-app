@@ -10,11 +10,11 @@ data class InventoryItem(
     val code: String = "",
     val inventoryNum: String = "",
     val barcode: String = "",
-    val manufactureDate: Long = 0,
+    val manufactureDate: Long? = null,
     val factoryNum: String = "",
     val building: String = "",
     val location: String = "",
-    val count: Int = 0,
+    val count: Int? = null,
     val changedAt: Long = Date().time,
     val lastUpdatedBy: String = "",
     val revision: Long = 0

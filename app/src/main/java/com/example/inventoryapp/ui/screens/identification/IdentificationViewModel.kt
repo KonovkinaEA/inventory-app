@@ -67,13 +67,40 @@ class IdentificationViewModel @Inject constructor(
             }
             IdentificationUiAction.StartScanning -> startScanning()
             IdentificationUiAction.SubmitBarcode -> viewModelScope.launch(ioDispatcher) {
-                checkItemExist(_uiState.value.item.barcode)
+                checkItemExistByBarcode(_uiState.value.item.barcode)
+            }
+            IdentificationUiAction.SubmitCode -> viewModelScope.launch(ioDispatcher) {
+                val code = _uiState.value.item.code
+                repository.getItemByCode(code)?.let {
+                    updateState(it)
+                    _uiState.value = uiState.value.copy(enableDelete = true)
+                } ?: run {
+                    _uiState.value = uiState.value.copy(enableDelete = false)
+                    val item = if (_uiState.value.editMode) {
+                        uiState.value.item.copy(code = code)
+                    } else {
+                        InventoryItem(code = code)
+                    }
+                    updateState(item)
+                }
+            }
+            IdentificationUiAction.SubmitInventoryNum -> viewModelScope.launch(ioDispatcher) {
+                val inventoryNum = _uiState.value.item.inventoryNum
+                repository.getItemByInventoryNum(inventoryNum)?.let {
+                    updateState(it)
+                    _uiState.value = uiState.value.copy(enableDelete = true)
+                } ?: run {
+                    _uiState.value = uiState.value.copy(enableDelete = false)
+                    val item = if (_uiState.value.editMode) {
+                        uiState.value.item.copy(inventoryNum = inventoryNum)
+                    } else {
+                        InventoryItem(inventoryNum = inventoryNum)
+                    }
+                    updateState(item)
+                }
             }
             is IdentificationUiAction.UpdateBarcode -> {
                 updateState(uiState.value.item.copy(barcode = action.barcode))
-            }
-            is IdentificationUiAction.UpdateName -> {
-                updateState(uiState.value.item.copy(name = action.name))
             }
             is IdentificationUiAction.UpdateCode -> {
                 updateState(uiState.value.item.copy(code = action.code))
@@ -81,8 +108,20 @@ class IdentificationViewModel @Inject constructor(
             is IdentificationUiAction.UpdateInventoryNumber -> {
                 updateState(uiState.value.item.copy(inventoryNum = action.inventoryNum))
             }
+            is IdentificationUiAction.UpdateName -> {
+                updateState(uiState.value.item.copy(name = action.name))
+            }
             is IdentificationUiAction.UpdateLocation -> {
                 updateState(uiState.value.item.copy(location = action.location))
+            }
+            is IdentificationUiAction.UpdateCount -> {
+                updateState(uiState.value.item.copy(count = action.count))
+            }
+            is IdentificationUiAction.UpdateFactoryNum -> {
+                updateState(uiState.value.item.copy(factoryNum = action.factoryNum))
+            }
+            is IdentificationUiAction.UpdateBuilding -> {
+                updateState(uiState.value.item.copy(building = action.building))
             }
         }
     }
@@ -90,12 +129,12 @@ class IdentificationViewModel @Inject constructor(
     private fun startScanning() {
         viewModelScope.launch(ioDispatcher) {
             scannerManager.scanningData.collect {
-                if (!it.isNullOrBlank()) checkItemExist(it)
+                if (!it.isNullOrBlank()) checkItemExistByBarcode(it)
             }
         }
     }
 
-    private suspend fun checkItemExist(barcode: String) {
+    private suspend fun checkItemExistByBarcode(barcode: String) {
         repository.getItemByBarcode(barcode)?.let {
             updateState(it)
             _uiState.value = uiState.value.copy(enableDelete = true)
