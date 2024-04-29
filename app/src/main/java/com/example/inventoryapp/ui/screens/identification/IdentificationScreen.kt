@@ -28,12 +28,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
 import com.example.inventoryapp.ui.common.MenuInputField
+import com.example.inventoryapp.ui.screens.identification.components.DatePicker
 import com.example.inventoryapp.ui.screens.identification.components.IdentificationTopAppBar
 import com.example.inventoryapp.ui.screens.identification.model.IdentificationUiAction
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
-import com.example.inventoryapp.util.millisToDate
+import java.time.ZoneOffset
 
 @Composable
 fun IdentificationScreen(
@@ -124,13 +125,18 @@ private fun IdentificationScreenContent(
                     MenuInputField(
                         label = "Количество",
                         value = "${state.item.count ?: ""}",
-                        readOnly = !state.editMode
+                        readOnly = !state.editMode,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     ) { onUiAction(IdentificationUiAction.UpdateCount(it.toIntOrNull())) }
-                    MenuInputField(
-                        label = "Дата выпуска",
-                        value = state.item.manufactureDate?.millisToDate() ?: "",
-                        readOnly = true
-                    ) { /* onUiAction(IdentificationUiAction.UpdateManufactureDate(it)) TODO */ }
+                    DatePicker(editMode = state.editMode, state.item.manufactureDate, updateDate = {
+                        onUiAction(
+                            IdentificationUiAction.UpdateManufactureDate(
+                                it.atStartOfDay(
+                                    ZoneOffset.UTC
+                                ).toInstant().toEpochMilli()
+                            )
+                        )
+                    }) { onUiAction(IdentificationUiAction.UpdateManufactureDate(null)) }
                     MenuInputField(
                         label = "Заводской номер",
                         value = state.item.factoryNum,

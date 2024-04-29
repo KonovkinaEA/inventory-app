@@ -114,6 +114,9 @@ class IdentificationViewModel @Inject constructor(
             is IdentificationUiAction.UpdateLocation -> {
                 updateState(uiState.value.item.copy(location = action.location))
             }
+            is IdentificationUiAction.UpdateManufactureDate -> {
+                updateState(uiState.value.item.copy(manufactureDate = action.date))
+            }
             is IdentificationUiAction.UpdateCount -> {
                 updateState(uiState.value.item.copy(count = action.count))
             }

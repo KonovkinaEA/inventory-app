@@ -15,6 +15,7 @@ sealed class IdentificationUiAction {
     data class UpdateInventoryNumber(val inventoryNum: String) : IdentificationUiAction()
     data class UpdateName(val name: String) : IdentificationUiAction()
     data class UpdateLocation(val location: String) : IdentificationUiAction()
+    data class UpdateManufactureDate(val date: Long?) : IdentificationUiAction()
     data class UpdateCount(val count: Int?) : IdentificationUiAction()
     data class UpdateFactoryNum(val factoryNum: String) : IdentificationUiAction()
     data class UpdateBuilding(val building: String) : IdentificationUiAction()
