@@ -3,7 +3,7 @@ package com.example.inventoryapp.data
 import com.example.inventoryapp.data.model.InventoryItem
 
 interface Repository {
-    suspend fun getAllItems(): List<InventoryItem>
+    suspend fun getItems(): List<InventoryItem>
     suspend fun getItemsByLocation(location: String): List<InventoryItem>
     suspend fun getItemById(id: String): InventoryItem?
     suspend fun getItemByBarcode(barcode: String): InventoryItem?

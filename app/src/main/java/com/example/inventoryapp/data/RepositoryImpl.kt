@@ -1,18 +1,31 @@
 package com.example.inventoryapp.data
 
+import com.example.inventoryapp.data.api.ApiService
 import com.example.inventoryapp.data.db.ItemDao
 import com.example.inventoryapp.data.model.InventoryItem
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
+    private val apiService: ApiService,
     private val itemDao: ItemDao
 ) : Repository {
 
     private var cachedItems: MutableList<InventoryItem> = mutableListOf()
 
-    override suspend fun getAllItems(): List<InventoryItem> {
-        val list = itemDao.findAllItems().map { it.toInventoryItem() }
-        cachedItems = list.toMutableList()
+    override suspend fun getItems(): List<InventoryItem> {
+        val list: List<InventoryItem>
+
+        val response = apiService.getItems()
+        if (response.isSuccessful) {
+            list = response.body() as List<InventoryItem>
+            if (list.isNotEmpty()) {
+                cachedItems = list.toMutableList()
+            }
+        } else {
+            list = itemDao.findAllItems().map { it.toInventoryItem() }
+            cachedItems = list.toMutableList()
+        }
+
         return list
     }
 
