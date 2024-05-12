@@ -33,6 +33,10 @@ interface AppModule {
 
         @Singleton
         @Provides
+        fun provideDeleteDao(database: AppDatabase) = database.getDeleteDao()
+
+        @Singleton
+        @Provides
         fun provideDatabase(@ApplicationContext context: Context) = AppDatabase.getInstance(context)
 
         @Singleton
