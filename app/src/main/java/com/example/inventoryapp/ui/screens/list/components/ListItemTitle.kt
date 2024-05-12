@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.example.inventoryapp.ui.common.MenuElevatedCard
@@ -13,11 +14,11 @@ import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
-fun MenuTitle(text: String) {
+fun MenuTitle(text: String, textColor: Color = ExtendedTheme.colors.labelTertiary) {
     Text(
         text = text,
         style = MaterialTheme.typography.labelLarge,
-        color = ExtendedTheme.colors.labelTertiary,
+        color = textColor,
         modifier = Modifier.fillMaxWidth()
     )
 }

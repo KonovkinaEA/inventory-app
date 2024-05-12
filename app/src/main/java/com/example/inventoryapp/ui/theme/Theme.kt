@@ -116,6 +116,12 @@ object ExtendedTheme {
     val cardColors: CardColors
         @Composable
         get() = CardDefaults.cardColors(containerColor = colors.backSecondary)
+    val correctCardColors: CardColors
+        @Composable
+        get() = CardDefaults.cardColors(containerColor = Color.Green)
+    val incorrectCardColors: CardColors
+        @Composable
+        get() = CardDefaults.cardColors(containerColor = Red)
     val textFieldColors: TextFieldColors
         @Composable
         get() = OutlinedTextFieldDefaults.colors(

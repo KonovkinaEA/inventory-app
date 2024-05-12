@@ -23,6 +23,22 @@ object Identification : Destination {
     fun navToOrderWithArgs(id: String = "") = "${route}/$id"
 }
 
+object Inventory : Destination {
+
+    const val id = "id"
+    override val route = "inventory"
+
+    const val routeWithArgs = "inventory/{id}"
+
+    val arguments = listOf(
+        navArgument(id) {
+            type = NavType.StringType
+        }
+    )
+
+    fun navToOrderWithArgs(id: String = "") = "$route/$id"
+}
+
 object ItemsList : Destination {
     const val id = "id"
     override val route = "list"

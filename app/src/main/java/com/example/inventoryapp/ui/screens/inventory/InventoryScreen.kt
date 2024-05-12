@@ -1,4 +1,4 @@
-package com.example.inventoryapp.ui.screens.list
+package com.example.inventoryapp.ui.screens.inventory
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,43 +16,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.ui.common.MenuElevatedCard
-import com.example.inventoryapp.ui.screens.list.components.ListTopAppBar
+import com.example.inventoryapp.ui.screens.inventory.components.InventoryBottomAppBar
+import com.example.inventoryapp.ui.screens.inventory.components.InventoryTopAppBar
+import com.example.inventoryapp.ui.screens.inventory.model.InventoryUiAction
+import com.example.inventoryapp.ui.screens.inventory.model.InventoryUiEvent
 import com.example.inventoryapp.ui.screens.list.components.MenuTitle
-import com.example.inventoryapp.ui.screens.list.model.ListUiAction
-import com.example.inventoryapp.ui.screens.list.model.ListUiEvent
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
+import com.example.inventoryapp.ui.theme.White
 
 @Composable
-fun ListScreen(
-    reload: Boolean,
-    closeScreen: () -> Unit,
-    openItem: (String) -> Unit,
-    viewModel: ListViewModel = hiltViewModel()
-) {
+fun InventoryScreen(closeScreen: () -> Unit, viewModel: InventoryViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
-
-    if (reload) viewModel.loadData()
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {
             when (it) {
-                is ListUiEvent.OpenItem -> openItem(it.id)
-                ListUiEvent.CloseScreen -> closeScreen()
+                InventoryUiEvent.CloseScreen -> closeScreen()
             }
         }
     }
 
-    ListScreenContent(state, viewModel::onUiAction)
+    InventoryScreenContent(state, viewModel::onUiAction)
 }
 
 @Composable
-private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> Unit) {
+private fun InventoryScreenContent(
+    state: InventoryUiState,
+    onUiAction: (InventoryUiAction) -> Unit
+) {
     Scaffold(
-        topBar = { ListTopAppBar(state.location, onUiAction) },
+        topBar = { InventoryTopAppBar(location = state.location, onUiAction) },
+        bottomBar = { InventoryBottomAppBar { onUiAction(InventoryUiAction.StartScanning) } },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         LazyColumn(
@@ -63,9 +60,14 @@ private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> 
             item { Spacer(modifier = Modifier.height(20.dp)) }
             items(state.list) {
                 if (it.name.isNotEmpty()) {
-                    MenuElevatedCard(
-                        onClick = { onUiAction(ListUiAction.OpenItem(it.id)) }
-                    ) { MenuTitle(text = it.name) }
+                    val cardColors = if (state.location == it.location) {
+                        ExtendedTheme.correctCardColors
+                    } else {
+                        ExtendedTheme.incorrectCardColors
+                    }
+                    MenuElevatedCard(cardColors = cardColors, onClick = {}) {
+                        MenuTitle(text = it.name, textColor = White)
+                    }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }
@@ -75,12 +77,10 @@ private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> 
 
 @Preview
 @Composable
-private fun ListScreenPreview(
+private fun InventoryScreenPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
-    val list = listOf(InventoryItem(name = "name 1"), InventoryItem(name = "name 2"))
-
     InventoryAppTheme(darkTheme = darkTheme) {
-        ListScreenContent(ListUiState(list = list)) {}
+        InventoryScreenContent(InventoryUiState(location = "3-403")) {}
     }
 }

@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.inventoryapp.ui.screens.identification.IdentificationScreen
+import com.example.inventoryapp.ui.screens.inventory.InventoryScreen
 import com.example.inventoryapp.ui.screens.list.ListScreen
 import com.example.inventoryapp.ui.screens.start.StartScreen
 
@@ -26,6 +27,13 @@ fun AppNavHost(navController: NavHostController) {
                     } else {
                         navController.navigate(ItemsList.route)
                     }
+                },
+                toInventory = {
+                    if (it.isNotEmpty()) {
+                        navController.navigate(Inventory.navToOrderWithArgs(it))
+                    } else {
+                        navController.navigate(Inventory.route)
+                    }
                 }
             )
         }
@@ -38,6 +46,12 @@ fun AppNavHost(navController: NavHostController) {
         composable(ItemsList.route) { NavListScreen(navController, it) }
         composable(ItemsList.routeWithArgs, arguments = ItemsList.arguments) {
             NavListScreen(navController, it)
+        }
+        composable(Inventory.route) {
+            InventoryScreen(closeScreen = { returnToPrevScreen(navController) })
+        }
+        composable(Inventory.routeWithArgs, arguments = Inventory.arguments) {
+            InventoryScreen(closeScreen = { returnToPrevScreen(navController) })
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -40,10 +41,14 @@ fun MenuElevatedCard(content: @Composable (ColumnScope.() -> Unit)) {
 }
 
 @Composable
-fun MenuElevatedCard(onClick: () -> Unit, content: @Composable (ColumnScope.() -> Unit)) {
+fun MenuElevatedCard(
+    cardColors: CardColors = ExtendedTheme.cardColors,
+    onClick: () -> Unit,
+    content: @Composable (ColumnScope.() -> Unit)
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        colors = ExtendedTheme.cardColors,
+        colors = cardColors,
         modifier = Modifier.padding(horizontal = 20.dp),
         onClick = { onClick() }
     ) {
