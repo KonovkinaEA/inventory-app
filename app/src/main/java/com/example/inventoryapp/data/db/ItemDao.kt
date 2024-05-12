@@ -3,6 +3,7 @@ package com.example.inventoryapp.data.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.inventoryapp.data.db.entities.ItemDbEntity
 
@@ -58,4 +59,20 @@ interface ItemDao {
 
     @Update(entity = ItemDbEntity::class)
     fun updateItem(item: ItemDbEntity)
+
+    @Transaction
+    fun replaceItems(items: List<ItemDbEntity>, location: String?) {
+        if (location != null) {
+            deleteItemsByLocation(location)
+        } else {
+            deleteAllItems()
+        }
+        items.forEach { addItem(it) }
+    }
+
+    @Query("DELETE FROM item")
+    fun deleteAllItems()
+
+    @Query("DELETE FROM item WHERE item.location = :location")
+    fun deleteItemsByLocation(location: String)
 }

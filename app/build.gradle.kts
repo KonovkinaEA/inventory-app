@@ -67,6 +67,11 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)
 
+    // networking
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.okhttp3.logging.interceptor)
+
     // room
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)

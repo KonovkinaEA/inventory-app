@@ -17,7 +17,7 @@ data class InventoryItem(
     val count: Int? = null,
     val changedAt: Long = Date().time,
     val lastUpdatedBy: String = "",
-    val revision: Long = 0
+    val revision: Long = -1
 ) {
 
     fun toItemDbEntity() = ItemDbEntity(

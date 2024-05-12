@@ -40,7 +40,7 @@ class ListViewModel @Inject constructor(
             val list = savedStateHandle.get<String>(ItemsList.id)?.let {
                 _uiState.value = ListUiState(location = it)
                 repository.getItemsByLocation(it)
-            } ?: repository.getAllItems()
+            } ?: repository.getItems()
             _uiState.value = uiState.value.copy(list = list)
         }
     }
