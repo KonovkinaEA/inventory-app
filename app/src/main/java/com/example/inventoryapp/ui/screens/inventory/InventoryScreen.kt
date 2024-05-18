@@ -1,12 +1,15 @@
 package com.example.inventoryapp.ui.screens.inventory
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
-import com.example.inventoryapp.ui.screens.inventory.components.InventoryBottomAppBar
 import com.example.inventoryapp.ui.screens.inventory.components.InventoryTopAppBar
 import com.example.inventoryapp.ui.screens.inventory.model.InventoryUiAction
 import com.example.inventoryapp.ui.screens.inventory.model.InventoryUiEvent
@@ -42,14 +45,25 @@ fun InventoryScreen(closeScreen: () -> Unit, viewModel: InventoryViewModel = hil
     InventoryScreenContent(state, viewModel::onUiAction)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InventoryScreenContent(
     state: InventoryUiState,
     onUiAction: (InventoryUiAction) -> Unit
 ) {
-    Scaffold(
+    BottomSheetScaffold(
         topBar = { InventoryTopAppBar(location = state.location, onUiAction) },
-        bottomBar = { InventoryBottomAppBar { onUiAction(InventoryUiAction.StartScanning) } },
+        sheetPeekHeight = BottomSheetDefaults.SheetPeekHeight,
+        sheetContent = {
+            Column(modifier = Modifier.height(BottomSheetDefaults.SheetPeekHeight)) {
+                MenuCardButton(
+                    text = "Сканировать штрихкод",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                ) { onUiAction(InventoryUiAction.StartScanning) }
+            }
+        },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         LazyColumn(

@@ -118,7 +118,7 @@ object ExtendedTheme {
         get() = CardDefaults.cardColors(containerColor = colors.backSecondary)
     val correctCardColors: CardColors
         @Composable
-        get() = CardDefaults.cardColors(containerColor = Color.Green)
+        get() = CardDefaults.cardColors(containerColor = Green)
     val incorrectCardColors: CardColors
         @Composable
         get() = CardDefaults.cardColors(containerColor = Red)

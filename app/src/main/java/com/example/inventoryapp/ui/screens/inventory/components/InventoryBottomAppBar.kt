@@ -1,7 +1,6 @@
 package com.example.inventoryapp.ui.screens.inventory.components
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,9 +15,12 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 @Composable
 fun InventoryBottomAppBar(scan: () -> Unit) {
     BottomAppBar(containerColor = ExtendedTheme.colors.backSecondary) {
-        Spacer(modifier = Modifier.width(20.dp))
-        MenuCardButton(text = "Сканировать штрихкод") { scan() }
-        Spacer(modifier = Modifier.width(20.dp))
+        MenuCardButton(
+            text = "Сканировать штрихкод",
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 20.dp)
+        ) { scan() }
     }
 }
 

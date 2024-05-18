@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 val White = Color(0xFFFFFFFF)
 val Blue = Color(0xFF007AFF)
 val Red = Color(0xFFFF0000)
+val Green = Color(0xFF34C759)
 
 val LightBackPrimary = Color(0xFFC7D1DB) // dark1000
 val LightBackSecondary = Color(0xFFDEE4EA) // dark1100
