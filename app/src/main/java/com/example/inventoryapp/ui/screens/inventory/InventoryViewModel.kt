@@ -47,27 +47,61 @@ class InventoryViewModel @Inject constructor(
                 _uiEvent.send(InventoryUiEvent.CloseScreen)
             }
             InventoryUiAction.StartScanning -> startScanning()
+            InventoryUiAction.SubmitBarcode -> viewModelScope.launch(ioDispatcher) {
+                repository.getItemByBarcode(_uiState.value.barcode)?.let { updateState(it) }
+            }
+            InventoryUiAction.SubmitCode -> viewModelScope.launch(ioDispatcher) {
+                repository.getItemByCode(_uiState.value.code)?.let { updateState(it) }
+            }
+            InventoryUiAction.SubmitInventoryNum -> viewModelScope.launch(ioDispatcher) {
+                repository.getItemByInventoryNum(_uiState.value.inventoryNum)?.let {
+                    updateState(it)
+                }
+            }
+            is InventoryUiAction.UpdateBarcode -> viewModelScope.launch {
+                _uiState.value = uiState.value.copy(barcode = action.barcode)
+            }
+            is InventoryUiAction.UpdateCode -> viewModelScope.launch {
+                _uiState.value = uiState.value.copy(code = action.code)
+            }
+            is InventoryUiAction.UpdateInventoryNumber -> viewModelScope.launch {
+                _uiState.value = uiState.value.copy(inventoryNum = action.inventoryNum)
+            }
+            is InventoryUiAction.OpenItem -> viewModelScope.launch {
+                _uiEvent.send(InventoryUiEvent.OpenItem(action.id))
+            }
+        }
+    }
+
+    fun reloadData() {
+        viewModelScope.launch(ioDispatcher) {
+            _uiState.value = uiState.value.copy(
+                list = uiState.value.list.mapNotNull { repository.getItemById(it.id) }
+            )
         }
     }
 
     private fun startScanning() {
         viewModelScope.launch(ioDispatcher) {
-            scannerManager.scanningData.collect {
-                if (!it.isNullOrBlank()) checkItemExistByBarcode(it)
+            scannerManager.scanningData.collect { barcode ->
+                if (!barcode.isNullOrBlank()) repository.getItemByBarcode(barcode)?.let {
+                    updateState(it)
+                }
             }
         }
     }
 
-    private suspend fun checkItemExistByBarcode(barcode: String) {
-        repository.getItemByBarcode(barcode)?.let {
-            val list = _uiState.value.list.toMutableList()
-            list.add(it)
-            _uiState.value = uiState.value.copy(list = list)
-        }
+    private fun updateState(item: InventoryItem) {
+        val list = _uiState.value.list.toMutableList()
+        list.add(item)
+        _uiState.value = uiState.value.copy(list = list)
     }
 }
 
 data class InventoryUiState(
     val location: String = "",
+    val barcode: String = "",
+    val code: String = "",
+    val inventoryNum: String = "",
     val list: List<InventoryItem> = listOf()
 )

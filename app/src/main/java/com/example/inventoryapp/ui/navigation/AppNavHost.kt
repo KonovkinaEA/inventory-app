@@ -48,10 +48,10 @@ fun AppNavHost(navController: NavHostController) {
             NavListScreen(navController, it)
         }
         composable(Inventory.route) {
-            InventoryScreen(closeScreen = { returnToPrevScreen(navController) })
+            NavInventoryScreen(navController, it)
         }
         composable(Inventory.routeWithArgs, arguments = Inventory.arguments) {
-            InventoryScreen(closeScreen = { returnToPrevScreen(navController) })
+            NavInventoryScreen(navController, it)
         }
     }
 }
@@ -60,6 +60,15 @@ fun AppNavHost(navController: NavHostController) {
 private fun NavListScreen(navController: NavHostController, entry: NavBackStackEntry) {
     val reload = entry.savedStateHandle.get<Boolean>("reload") ?: false
     ListScreen(
+        reload = reload,
+        closeScreen = { returnToPrevScreen(navController) },
+        openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
+}
+
+@Composable
+private fun NavInventoryScreen(navController: NavHostController, entry: NavBackStackEntry) {
+    val reload = entry.savedStateHandle.get<Boolean>("reload") ?: false
+    InventoryScreen(
         reload = reload,
         closeScreen = { returnToPrevScreen(navController) },
         openItem = { navController.navigate(Identification.navToOrderWithArgs(it)) })
