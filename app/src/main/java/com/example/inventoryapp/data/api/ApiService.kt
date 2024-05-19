@@ -14,11 +14,7 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("items")
-    suspend fun getItems(
-        @Query("name") name: String? = null,
-        @Query("location") location: String? = null,
-        @Query("lastUpdatedBy") lastUpdatedBy: String? = null
-    ): Response<List<InventoryItem>>
+    suspend fun getItems(@Query("location") location: String? = null): Response<List<InventoryItem>>
 
     @PATCH("items")
     suspend fun updateItems(
