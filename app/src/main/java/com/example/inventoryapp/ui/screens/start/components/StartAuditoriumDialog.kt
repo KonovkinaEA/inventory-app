@@ -51,7 +51,10 @@ fun AuditoriumDialog(
                 MenuInputField(label = "Местоположение", value = location, readOnly = false) {
                     onValueChanged(it)
                 }
-                MenuCardButton(text = "Найти") { onConfirmation() }
+                MenuCardButton(
+                    text = "Найти",
+                    enable = location.isNotEmpty()
+                ) { onConfirmation() }
             }
         }
     }
