@@ -29,10 +29,19 @@ class StartViewModel @Inject constructor() : ViewModel() {
                 _uiEvent.send(StartUiEvent.OpenInventory(_uiState.value.location))
             StartUiAction.OpenLocationList ->
                 _uiEvent.send(StartUiEvent.OpenList(_uiState.value.location))
-            StartUiAction.ClearLocation -> _uiState.value = StartUiState()
-            is StartUiAction.UpdateLocation -> _uiState.value = StartUiState(action.location)
+            StartUiAction.ClearLocation ->
+                _uiState.value = uiState.value.copy(location = "")
+            StartUiAction.SaveUsername -> { /*TODO*/
+            }
+            is StartUiAction.UpdateLocation ->
+                _uiState.value = uiState.value.copy(location = action.location)
+            is StartUiAction.UpdateUsername ->
+                _uiState.value = uiState.value.copy(username = action.name)
         }
     }
 }
 
-data class StartUiState(val location: String = "")
+data class StartUiState(
+    val location: String = "",
+    val username: String = ""
+)

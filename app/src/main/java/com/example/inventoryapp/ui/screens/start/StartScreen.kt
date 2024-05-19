@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,9 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.inventoryapp.ui.common.CustomDialog
 import com.example.inventoryapp.ui.common.MenuCardButton
 import com.example.inventoryapp.ui.common.MenuElevatedCard
-import com.example.inventoryapp.ui.screens.start.components.AuditoriumDialog
+import com.example.inventoryapp.ui.screens.start.components.SettingsButton
 import com.example.inventoryapp.ui.screens.start.model.StartUiAction
 import com.example.inventoryapp.ui.screens.start.model.StartUiEvent
 import com.example.inventoryapp.ui.theme.ExtendedTheme
@@ -52,62 +54,88 @@ fun StartScreen(
 
 @Composable
 private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) -> Unit) {
-    var openLocationDialogList by remember { mutableStateOf(false) }
-    var openLocationDialogInventory by remember { mutableStateOf(false) }
+    var openLocationListDialog by remember { mutableStateOf(false) }
+    var openLocationInventoryDialog by remember { mutableStateOf(false) }
+    var openSettingsDialog by remember { mutableStateOf(false) }
 
-    if (openLocationDialogList) {
-        AuditoriumDialog(
-            state.location,
-            onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
-            onDismissRequest = {
-                openLocationDialogList = false
-                onUiAction(StartUiAction.ClearLocation)
-            },
-            onConfirmation = {
-                openLocationDialogList = false
-                onUiAction(StartUiAction.OpenLocationList)
-                onUiAction(StartUiAction.ClearLocation)
+    Scaffold(
+        floatingActionButton = { SettingsButton { openSettingsDialog = true } },
+        containerColor = ExtendedTheme.colors.backPrimary
+    ) { paddingValues ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(20.dp)
+        ) {
+            MenuElevatedCard {
+                MenuCardButton(text = "Идентифицировать предмет") {
+                    onUiAction(StartUiAction.OpenIdentification)
+                }
+                MenuCardButton(text = "Начать проверку в помещении") {
+                    openLocationInventoryDialog = true
+                }
             }
-        )
-    }
-    if (openLocationDialogInventory) {
-        AuditoriumDialog(
-            state.location,
-            onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
-            onDismissRequest = {
-                openLocationDialogInventory = false
-                onUiAction(StartUiAction.ClearLocation)
-            },
-            onConfirmation = {
-                openLocationDialogInventory = false
-                onUiAction(StartUiAction.OpenInventory)
-                onUiAction(StartUiAction.ClearLocation)
-            }
-        )
-    }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-    ) {
-        MenuElevatedCard {
-            MenuCardButton(text = "Идентифицировать предмет") {
-                onUiAction(StartUiAction.OpenIdentification)
-            }
-            MenuCardButton(text = "Начать проверку в помещении") {
-                openLocationDialogInventory = true
+            MenuElevatedCard {
+                MenuCardButton(text = "Получить список предметов в помещении") {
+                    openLocationListDialog = true
+                }
+                MenuCardButton(text = "Получить список всех предметов") {
+                    onUiAction(StartUiAction.OpenList)
+                }
             }
         }
-        MenuElevatedCard {
-            MenuCardButton(text = "Получить список предметов в помещении") {
-                openLocationDialogList = true
-            }
-            MenuCardButton(text = "Получить список всех предметов") {
-                onUiAction(StartUiAction.OpenList)
-            }
+
+        if (openLocationListDialog) {
+            CustomDialog(
+                value = state.location,
+                inputFieldLabel = "Местоположение",
+                buttonLabel = "Найти",
+                onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
+                onDismissRequest = {
+                    openLocationListDialog = false
+                    onUiAction(StartUiAction.ClearLocation)
+                },
+                onConfirmation = {
+                    openLocationListDialog = false
+                    onUiAction(StartUiAction.OpenLocationList)
+                    onUiAction(StartUiAction.ClearLocation)
+                }
+            )
+        }
+        if (openLocationInventoryDialog) {
+            CustomDialog(
+                value = state.location,
+                inputFieldLabel = "Местоположение",
+                buttonLabel = "Начать",
+                onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
+                onDismissRequest = {
+                    openLocationInventoryDialog = false
+                    onUiAction(StartUiAction.ClearLocation)
+                },
+                onConfirmation = {
+                    openLocationInventoryDialog = false
+                    onUiAction(StartUiAction.OpenInventory)
+                    onUiAction(StartUiAction.ClearLocation)
+                }
+            )
+        }
+        if (openSettingsDialog) {
+            CustomDialog(
+                value = state.username,
+                inputFieldLabel = "Имя пользователя",
+                buttonLabel = "Сохранить",
+                onValueChanged = { onUiAction(StartUiAction.UpdateUsername(it)) },
+                onDismissRequest = {
+                    openSettingsDialog = false
+                },
+                onConfirmation = {
+                    openSettingsDialog = false
+                    onUiAction(StartUiAction.SaveUsername)
+                }
+            )
         }
     }
 }

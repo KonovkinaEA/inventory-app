@@ -1,4 +1,4 @@
-package com.example.inventoryapp.ui.screens.start.components
+package com.example.inventoryapp.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.inventoryapp.ui.common.MenuCardButton
-import com.example.inventoryapp.ui.common.MenuInputField
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
 
 @Composable
-fun AuditoriumDialog(
-    location: String,
+fun CustomDialog(
+    value: String,
+    inputFieldLabel: String,
+    buttonLabel: String,
     onValueChanged: (String) -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
@@ -48,12 +48,12 @@ fun AuditoriumDialog(
                     .fillMaxSize()
                     .padding(20.dp)
             ) {
-                MenuInputField(label = "Местоположение", value = location, readOnly = false) {
+                MenuInputField(label = inputFieldLabel, value = value, readOnly = false) {
                     onValueChanged(it)
                 }
                 MenuCardButton(
-                    text = "Найти",
-                    enable = location.isNotEmpty()
+                    text = buttonLabel,
+                    enable = value.isNotEmpty()
                 ) { onConfirmation() }
             }
         }
@@ -62,10 +62,15 @@ fun AuditoriumDialog(
 
 @Preview
 @Composable
-private fun AuditoriumDialogPreview(
+private fun CustomDialogPreview(
     @PreviewParameter(ThemeModePreview::class) darkTheme: Boolean
 ) {
     InventoryAppTheme(darkTheme = darkTheme) {
-        AuditoriumDialog(location = "", onValueChanged = {}, onDismissRequest = {}) {}
+        CustomDialog(
+            value = "",
+            inputFieldLabel = "Местоположение",
+            buttonLabel = "Найти",
+            onValueChanged = {},
+            onDismissRequest = {}) {}
     }
 }
