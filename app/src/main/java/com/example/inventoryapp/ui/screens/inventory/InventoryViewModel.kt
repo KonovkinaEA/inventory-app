@@ -58,6 +58,15 @@ class InventoryViewModel @Inject constructor(
                     updateState(it)
                 }
             }
+            InventoryUiAction.EndProcess -> viewModelScope.launch(ioDispatcher) {
+                val currentList = _uiState.value.list.toMutableList()
+                repository.getItemsByLocation(_uiState.value.location).forEach { item ->
+                    if (!_uiState.value.list.any { item.id == it.id }) currentList.add(
+                        item.copy(isCorrectlyPlaced = false)
+                    )
+                }
+                _uiState.value = uiState.value.copy(list = currentList.toList(), endProcess = true)
+            }
             is InventoryUiAction.UpdateBarcode -> viewModelScope.launch {
                 _uiState.value = uiState.value.copy(barcode = action.barcode)
             }
@@ -76,7 +85,10 @@ class InventoryViewModel @Inject constructor(
     fun reloadData() {
         viewModelScope.launch(ioDispatcher) {
             _uiState.value = uiState.value.copy(
-                list = uiState.value.list.mapNotNull { repository.getItemById(it.id) }
+                list = uiState.value.list.mapNotNull {
+                    val item = repository.getItemById(it.id)
+                    item?.copy(isCorrectlyPlaced = item.location == _uiState.value.location)
+                }
             )
         }
     }
@@ -92,8 +104,9 @@ class InventoryViewModel @Inject constructor(
     }
 
     private fun updateState(item: InventoryItem) {
+        val updatedItem = item.copy(isCorrectlyPlaced = item.location == _uiState.value.location)
         val list = _uiState.value.list.toMutableList()
-        list.add(item)
+        list.add(updatedItem)
         _uiState.value = uiState.value.copy(list = list)
     }
 }
@@ -103,5 +116,6 @@ data class InventoryUiState(
     val barcode: String = "",
     val code: String = "",
     val inventoryNum: String = "",
-    val list: List<InventoryItem> = listOf()
+    val list: List<InventoryItem> = listOf(),
+    val endProcess: Boolean = false
 )

@@ -72,7 +72,7 @@ private fun InventoryScreenContent(
     var columnHeightDp by remember { mutableStateOf(0.dp) }
 
     BottomSheetScaffold(
-        topBar = { InventoryTopAppBar(location = state.location, onUiAction) },
+        topBar = { InventoryTopAppBar(state, onUiAction) },
         sheetContent = {
             Column(
                 modifier = Modifier
@@ -82,44 +82,52 @@ private fun InventoryScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
             ) {
-                MenuCardButton(text = "Сканировать штрихкод") {
-                    onUiAction(InventoryUiAction.StartScanning)
+                if (!state.endProcess) {
+                    MenuCardButton(text = "Сканировать штрихкод") {
+                        onUiAction(InventoryUiAction.StartScanning)
+                    }
+                } else {
+                    MenuCardButton(text = "Получить отчет") {}
                 }
             }
-            Column(modifier = Modifier.padding(20.dp)) {
-                MenuInputField(
-                    label = "Штрихкод",
-                    value = state.barcode,
-                    readOnly = false,
-                    confirmButton = true,
-                    confirm = {
-                        onUiAction(InventoryUiAction.SubmitBarcode)
-                        focusManager.clearFocus()
-                    }
-                ) { onUiAction(InventoryUiAction.UpdateBarcode(it)) }
-                MenuInputField(
-                    label = "Код",
-                    value = state.code,
-                    readOnly = false,
-                    confirmButton = true,
-                    confirm = {
-                        onUiAction(InventoryUiAction.SubmitCode)
-                        focusManager.clearFocus()
-                    }
-                ) { onUiAction(InventoryUiAction.UpdateCode(it)) }
-                MenuInputField(
-                    label = "Инвентарный номер",
-                    value = state.inventoryNum,
-                    readOnly = false,
-                    confirmButton = true,
-                    confirm = {
-                        onUiAction(InventoryUiAction.SubmitInventoryNum)
-                        focusManager.clearFocus()
-                    }
-                ) { onUiAction(InventoryUiAction.UpdateInventoryNumber(it)) }
+            if (!state.endProcess) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    MenuInputField(
+                        label = "Штрихкод",
+                        value = state.barcode,
+                        readOnly = false,
+                        confirmButton = true,
+                        confirm = {
+                            onUiAction(InventoryUiAction.SubmitBarcode)
+                            focusManager.clearFocus()
+                        }
+                    ) { onUiAction(InventoryUiAction.UpdateBarcode(it)) }
+                    MenuInputField(
+                        label = "Код",
+                        value = state.code,
+                        readOnly = false,
+                        confirmButton = true,
+                        confirm = {
+                            onUiAction(InventoryUiAction.SubmitCode)
+                            focusManager.clearFocus()
+                        }
+                    ) { onUiAction(InventoryUiAction.UpdateCode(it)) }
+                    MenuInputField(
+                        label = "Инвентарный номер",
+                        value = state.inventoryNum,
+                        readOnly = false,
+                        confirmButton = true,
+                        confirm = {
+                            onUiAction(InventoryUiAction.SubmitInventoryNum)
+                            focusManager.clearFocus()
+                        }
+                    ) { onUiAction(InventoryUiAction.UpdateInventoryNumber(it)) }
+                }
             }
         },
         sheetPeekHeight = BottomSheetDefaults.SheetPeekHeight + columnHeightDp,
+        sheetShadowElevation = 10.dp,
+        sheetSwipeEnabled = !state.endProcess,
         sheetContainerColor = ExtendedTheme.colors.backSecondary,
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
@@ -131,7 +139,7 @@ private fun InventoryScreenContent(
             item { Spacer(modifier = Modifier.height(20.dp)) }
             items(state.list) {
                 if (it.name.isNotEmpty()) {
-                    val cardColors = if (state.location == it.location) {
+                    val cardColors = if (it.isCorrectlyPlaced) {
                         ExtendedTheme.correctCardColors
                     } else {
                         ExtendedTheme.incorrectCardColors
