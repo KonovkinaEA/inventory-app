@@ -93,6 +93,10 @@ dependencies {
     implementation(libs.maxkeppeler.dialogs.core)
     implementation(libs.maxkeppeler.dialogs.calendar)
 
+    // datastore
+    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.serialization.json)
+
     // test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
