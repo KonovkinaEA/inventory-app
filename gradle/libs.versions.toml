@@ -3,14 +3,14 @@ agp = "8.3.2"
 kotlin = "1.9.0"
 hilt = "2.49"
 ktxSerialization = "1.6.10"
-coreKtx = "1.13.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
+lifecycleRuntimeKtx = "2.8.0"
 activityCompose = "1.9.0"
-compose = "1.6.6"
-composeBom = "2024.04.01"
+compose = "1.6.7"
+composeBom = "2024.05.00"
 codeScanner = "16.1.0"
 hiltCompiler = "2.47"
 androidxHilt = "1.2.0"
@@ -19,6 +19,8 @@ room = "2.6.1"
 maxkeppeler = "1.3.0"
 retrofit = "2.9.0"
 okhttp3 = "4.11.0"
+serializationJson = "1.3.2"
+datastore = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +53,8 @@ maxkeppeler-dialogs-calendar = { group = "com.maxkeppeler.sheets-compose-dialogs
 retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

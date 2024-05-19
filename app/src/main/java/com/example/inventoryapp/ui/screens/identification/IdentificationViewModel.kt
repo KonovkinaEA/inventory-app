@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventoryapp.data.Repository
 import com.example.inventoryapp.data.ScannerManager
+import com.example.inventoryapp.data.datastore.DataStoreManager
 import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.di.IoDispatcher
 import com.example.inventoryapp.ui.navigation.Identification
@@ -14,6 +15,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,9 +25,11 @@ class IdentificationViewModel @Inject constructor(
     private val repository: Repository,
     private val scannerManager: ScannerManager,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
+    private var username = ""
     private var beforeEditItem = InventoryItem()
 
     private val _uiState = MutableStateFlow(IdentificationUiState(InventoryItem()))
@@ -42,6 +46,9 @@ class IdentificationViewModel @Inject constructor(
                 updateState(item)
                 _uiState.value = uiState.value.copy(enableDelete = true)
             }
+            dataStoreManager.userSettings.collectLatest { settings ->
+                settings.username?.let { username = it }
+            }
         }
     }
 
@@ -49,7 +56,9 @@ class IdentificationViewModel @Inject constructor(
         when (action) {
             IdentificationUiAction.CloseScreen -> closeScreen()
             IdentificationUiAction.SaveItem -> {
-                viewModelScope.launch(ioDispatcher) { repository.saveItem(_uiState.value.item) }
+                viewModelScope.launch(ioDispatcher) {
+                    repository.saveItem(_uiState.value.item.copy(lastUpdatedBy = username))
+                }
                 closeScreen()
             }
             IdentificationUiAction.DeleteItem -> {
