@@ -25,6 +25,8 @@ class StartViewModel @Inject constructor() : ViewModel() {
         when (action) {
             StartUiAction.OpenIdentification -> _uiEvent.send(StartUiEvent.OpenIdentification)
             StartUiAction.OpenList -> _uiEvent.send(StartUiEvent.OpenList(location = ""))
+            StartUiAction.OpenInventory ->
+                _uiEvent.send(StartUiEvent.OpenInventory(_uiState.value.location))
             StartUiAction.OpenLocationList ->
                 _uiEvent.send(StartUiEvent.OpenList(_uiState.value.location))
             StartUiAction.ClearLocation -> _uiState.value = StartUiState()

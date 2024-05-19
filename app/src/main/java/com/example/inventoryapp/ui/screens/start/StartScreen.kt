@@ -32,6 +32,7 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 fun StartScreen(
     toIdentification: () -> Unit,
     toList: (String) -> Unit,
+    toInventory: (String) -> Unit,
     viewModel: StartViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -40,6 +41,7 @@ fun StartScreen(
         viewModel.uiEvent.collect {
             when (it) {
                 StartUiEvent.OpenIdentification -> toIdentification()
+                is StartUiEvent.OpenInventory -> toInventory(it.location)
                 is StartUiEvent.OpenList -> toList(it.location)
             }
         }
@@ -50,19 +52,35 @@ fun StartScreen(
 
 @Composable
 private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) -> Unit) {
-    var openAuditoriumDialog by remember { mutableStateOf(false) }
+    var openLocationDialogList by remember { mutableStateOf(false) }
+    var openLocationDialogInventory by remember { mutableStateOf(false) }
 
-    if (openAuditoriumDialog) {
+    if (openLocationDialogList) {
         AuditoriumDialog(
             state.location,
             onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
             onDismissRequest = {
-                openAuditoriumDialog = false
+                openLocationDialogList = false
                 onUiAction(StartUiAction.ClearLocation)
             },
             onConfirmation = {
-                openAuditoriumDialog = false
+                openLocationDialogList = false
                 onUiAction(StartUiAction.OpenLocationList)
+                onUiAction(StartUiAction.ClearLocation)
+            }
+        )
+    }
+    if (openLocationDialogInventory) {
+        AuditoriumDialog(
+            state.location,
+            onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
+            onDismissRequest = {
+                openLocationDialogInventory = false
+                onUiAction(StartUiAction.ClearLocation)
+            },
+            onConfirmation = {
+                openLocationDialogInventory = false
+                onUiAction(StartUiAction.OpenInventory)
                 onUiAction(StartUiAction.ClearLocation)
             }
         )
@@ -79,11 +97,13 @@ private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) 
             MenuCardButton(text = "Идентифицировать предмет") {
                 onUiAction(StartUiAction.OpenIdentification)
             }
-            MenuCardButton(text = "Начать проверку в помещении") {}
+            MenuCardButton(text = "Начать проверку в помещении") {
+                openLocationDialogInventory = true
+            }
         }
         MenuElevatedCard {
             MenuCardButton(text = "Получить список предметов в помещении") {
-                openAuditoriumDialog = true
+                openLocationDialogList = true
             }
             MenuCardButton(text = "Получить список всех предметов") {
                 onUiAction(StartUiAction.OpenList)

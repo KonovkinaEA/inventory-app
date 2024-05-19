@@ -1,7 +1,5 @@
 package com.example.inventoryapp.ui.screens.list
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -64,7 +62,7 @@ private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> 
         ) {
             item { Spacer(modifier = Modifier.height(20.dp)) }
             items(state.list) {
-                if (it.name != null) {
+                if (it.name.isNotEmpty()) {
                     MenuElevatedCard(
                         onClick = { onUiAction(ListUiAction.OpenItem(it.id)) }
                     ) { MenuTitle(text = it.name) }
@@ -83,8 +81,6 @@ private fun ListScreenPreview(
     val list = listOf(InventoryItem(name = "name 1"), InventoryItem(name = "name 2"))
 
     InventoryAppTheme(darkTheme = darkTheme) {
-        Box(modifier = Modifier.background(ExtendedTheme.colors.backPrimary)) {
-            ListScreenContent(ListUiState(list = list)) {}
-        }
+        ListScreenContent(ListUiState(list = list)) {}
     }
 }

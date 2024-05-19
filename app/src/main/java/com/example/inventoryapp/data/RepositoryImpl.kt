@@ -126,7 +126,11 @@ class RepositoryImpl @Inject constructor(
                 if (dbData != null) {
                     itemDao.updateItem(serverData.toItemDbEntity())
                 } else {
-                    itemDao.addItem(serverData.toItemDbEntity())
+                    if (tryGetItemByAllFields(serverData) != null) {
+                        itemDao.updateItem(serverData.toItemDbEntity())
+                    } else {
+                        itemDao.addItem(serverData.toItemDbEntity())
+                    }
                 }
                 serverData
             } else {
@@ -135,4 +139,9 @@ class RepositoryImpl @Inject constructor(
         } else {
             dbData
         }
+
+    private fun tryGetItemByAllFields(item: InventoryItem) =
+        itemDao.getItemById(item.id)?.toInventoryItem() ?: itemDao.getItemByCode(item.code)
+            ?.toInventoryItem() ?: itemDao.getItemByBarcode(item.barcode)?.toInventoryItem()
+        ?: itemDao.getItemByInventoryNum(item.inventoryNum)?.toInventoryItem()
 }

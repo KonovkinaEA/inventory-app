@@ -14,6 +14,7 @@ data class InventoryItem(
     val factoryNum: String = "",
     val building: String = "",
     val location: String = "",
+    val isCorrectlyPlaced: Boolean = true,
     val count: Int? = null,
     val changedAt: Long = Date().time,
     val lastUpdatedBy: String = "",
