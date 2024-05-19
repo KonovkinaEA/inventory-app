@@ -33,6 +33,8 @@ class InventoryViewModel @Inject constructor(
     private val _uiEvent = Channel<InventoryUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    private lateinit var openedItemId: String
+
     init {
         viewModelScope.launch(ioDispatcher) {
             savedStateHandle.get<String>(Inventory.id)?.let {
@@ -77,6 +79,7 @@ class InventoryViewModel @Inject constructor(
                 _uiState.value = uiState.value.copy(inventoryNum = action.inventoryNum)
             }
             is InventoryUiAction.OpenItem -> viewModelScope.launch {
+                openedItemId = action.id
                 _uiEvent.send(InventoryUiEvent.OpenItem(action.id))
             }
         }
@@ -84,12 +87,25 @@ class InventoryViewModel @Inject constructor(
 
     fun reloadData() {
         viewModelScope.launch(ioDispatcher) {
-            _uiState.value = uiState.value.copy(
-                list = uiState.value.list.mapNotNull {
-                    val item = repository.getItemById(it.id)
-                    item?.copy(isCorrectlyPlaced = item.location == _uiState.value.location)
+            _uiState.value.list.find { it.id == openedItemId }?.let { item ->
+                repository.getItemById(openedItemId)?.let { newItem ->
+                    var updatedItem = item
+
+                    if (item.name != newItem.name) updatedItem = newItem
+                    if (item.location != newItem.location) {
+                        updatedItem = newItem.copy(
+                            isCorrectlyPlaced = newItem.location == uiState.value.location
+                        )
+                    }
+                    if (updatedItem != item) {
+                        _uiState.value = uiState.value.copy(
+                            list = uiState.value.list.map {
+                                if (it.id == openedItemId) updatedItem else it
+                            }
+                        )
+                    }
                 }
-            )
+            }
         }
     }
 
