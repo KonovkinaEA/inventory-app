@@ -13,17 +13,11 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("items")
-    suspend fun getItems(@Query("location") location: String? = null): Response<List<InventoryItem>>
-
     @PATCH("items")
     suspend fun updateItems(
         @Body list: UpdatedData,
         @Query("location") location: String? = null
     ): Response<List<InventoryItem>>
-
-    @DELETE("items")
-    suspend fun deleteItems(): Response<Unit>
 
     @GET("items/item")
     suspend fun getItem(
