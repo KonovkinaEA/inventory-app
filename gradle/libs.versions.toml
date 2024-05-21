@@ -21,6 +21,8 @@ retrofit = "2.9.0"
 okhttp3 = "4.11.0"
 serializationJson = "1.3.2"
 datastore = "1.1.1"
+mockk = "1.13.11"
+coroutinesVersion = "1.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,7 +56,9 @@ retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", vers
 retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesVersion" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+mockk-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
