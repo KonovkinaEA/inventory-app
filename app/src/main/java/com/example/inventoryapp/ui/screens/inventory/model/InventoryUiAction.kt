@@ -7,7 +7,6 @@ sealed class InventoryUiAction {
     data object SubmitCode : InventoryUiAction()
     data object SubmitInventoryNum : InventoryUiAction()
     data object EndProcess : InventoryUiAction()
-    data object DownloadExcel : InventoryUiAction()
 
     data class UpdateBarcode(val barcode: String) : InventoryUiAction()
     data class UpdateCode(val code: String) : InventoryUiAction()

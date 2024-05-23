@@ -108,8 +108,12 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun downloadItemsExcel() {
-        downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/download")
+    override suspend fun downloadItemsExcel(location: String?) {
+        if (location != null) {
+            downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/download/${location}")
+        } else {
+            downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/download")
+        }
     }
 
     private fun updateList(
