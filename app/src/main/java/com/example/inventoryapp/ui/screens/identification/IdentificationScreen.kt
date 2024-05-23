@@ -95,8 +95,7 @@ private fun IdentificationScreenContent(
                     confirm = {
                         onUiAction(IdentificationUiAction.SubmitCode)
                         focusManager.clearFocus()
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    }
                 ) { onUiAction(IdentificationUiAction.UpdateCode(it)) }
                 MenuInputField(
                     label = "Инвентарный номер",
@@ -106,8 +105,7 @@ private fun IdentificationScreenContent(
                     confirm = {
                         onUiAction(IdentificationUiAction.SubmitInventoryNum)
                         focusManager.clearFocus()
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    }
                 ) { onUiAction(IdentificationUiAction.UpdateInventoryNumber(it)) }
             }
             MenuElevatedCard {
@@ -125,8 +123,7 @@ private fun IdentificationScreenContent(
                     MenuInputField(
                         label = "Количество",
                         value = "${state.item.count ?: ""}",
-                        readOnly = !state.editMode,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        readOnly = !state.editMode
                     ) { onUiAction(IdentificationUiAction.UpdateCount(it.toIntOrNull())) }
                     DatePicker(editMode = state.editMode, state.item.manufactureDate, updateDate = {
                         onUiAction(

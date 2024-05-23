@@ -31,6 +31,7 @@ data class InventoryItem(
         factoryNum = factoryNum,
         building = building,
         location = location,
+        isCorrectlyPlaced = isCorrectlyPlaced,
         count = count,
         changedAt = changedAt,
         lastUpdatedBy = lastUpdatedBy,

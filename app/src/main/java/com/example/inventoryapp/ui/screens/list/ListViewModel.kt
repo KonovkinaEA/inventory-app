@@ -47,11 +47,14 @@ class ListViewModel @Inject constructor(
 
     fun onUiAction(action: ListUiAction) {
         when (action) {
-            is ListUiAction.OpenItem -> viewModelScope.launch {
-                _uiEvent.send(ListUiEvent.OpenItem(action.id))
-            }
             ListUiAction.CloseScreen -> viewModelScope.launch {
                 _uiEvent.send(ListUiEvent.CloseScreen)
+            }
+            ListUiAction.DownloadExcel -> viewModelScope.launch(ioDispatcher) {
+                repository.downloadItemsExcel(_uiState.value.location)
+            }
+            is ListUiAction.OpenItem -> viewModelScope.launch {
+                _uiEvent.send(ListUiEvent.OpenItem(action.id))
             }
         }
     }

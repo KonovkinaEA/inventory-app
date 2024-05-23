@@ -8,7 +8,7 @@ import com.example.inventoryapp.data.db.entities.DeleteIdEntity
 import com.example.inventoryapp.data.db.entities.ItemDbEntity
 
 @Database(
-    version = 4,
+    version = 5,
     entities = [
         ItemDbEntity::class,
         DeleteIdEntity::class
@@ -24,6 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
         private var instance: AppDatabase? = null
         fun getInstance(context: Context) = instance ?: synchronized(this) {
             Room.databaseBuilder(context, AppDatabase::class.java, "database.db")
+                .fallbackToDestructiveMigration()
                 .createFromAsset("inventory_db.db")
                 .build()
         }

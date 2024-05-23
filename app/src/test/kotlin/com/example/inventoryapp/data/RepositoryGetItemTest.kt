@@ -1,5 +1,6 @@
 package com.example.inventoryapp.data
 
+import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
 import com.example.inventoryapp.data.db.DeleteDao
 import com.example.inventoryapp.data.db.ItemDao
@@ -21,8 +22,9 @@ class RepositoryGetItemTest {
     private val apiService = mockk<ApiService>()
     private val itemDao = mockk<ItemDao>()
     private val deleteDao = mockk<DeleteDao>()
+    private val downloader = mockk<AndroidDownloader>()
 
-    private val repository: Repository = RepositoryImpl(apiService, itemDao, deleteDao)
+    private val repository: Repository = RepositoryImpl(apiService, itemDao, deleteDao, downloader)
 
     @Before
     fun setUp() {

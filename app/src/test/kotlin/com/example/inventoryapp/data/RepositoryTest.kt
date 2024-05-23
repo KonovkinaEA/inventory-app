@@ -1,5 +1,6 @@
 package com.example.inventoryapp.data
 
+import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
 import com.example.inventoryapp.data.db.DeleteDao
 import com.example.inventoryapp.data.db.ItemDao
@@ -7,43 +8,45 @@ import com.example.inventoryapp.data.db.entities.DeleteIdEntity
 import com.example.inventoryapp.data.model.InventoryItem
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
 
 class RepositoryTest {
 
-    private val apiService = mockk<ApiService>()
-    private val itemDao = mockk<ItemDao>()
-    private val deleteDao = mockk<DeleteDao>()
-
-    private val repository: Repository = RepositoryImpl(apiService, itemDao, deleteDao)
-
-    @Before
-    fun setUp() {
-        coEvery { apiService.updateItems(any()) } returns Response.success(apiItems)
-        coEvery { apiService.updateItems(any(), any()) } returns Response.success(apiItems)
-        coEvery { apiService.updateItem(any()) } returns Response.success(item)
-        coEvery { apiService.addItem(any()) } returns Response.success(item)
-        coEvery { apiService.getItem(any()) } returns Response.success(item)
-        coEvery { apiService.deleteItem(any()) } returns Response.success(Unit)
-        coEvery { itemDao.findAllItems() } returns dbItems.map { it.toItemDbEntity() }
-        coEvery { itemDao.findItemsByLocation(any()) } returns dbItems.map { it.toItemDbEntity() }
-        coEvery { itemDao.replaceItems(any(), any()) } just runs
-        coEvery { itemDao.getItemById(any()) } returns item.toItemDbEntity()
-        coEvery { itemDao.updateItem(any()) } just runs
-        coEvery { itemDao.addItem(any()) } just runs
-        coEvery { itemDao.deleteItem(any()) } just runs
-        coEvery { deleteDao.getIds() } returns deleteIds
-        coEvery { deleteDao.removeIds() } just runs
-        coEvery { deleteDao.addId(any()) } just runs
+    private val apiService = mockk<ApiService> {
+        coEvery { updateItems(any()) } returns Response.success(apiItems)
+        coEvery { updateItems(any(), any()) } returns Response.success(apiItems)
+        coEvery { updateItem(any()) } returns Response.success(item)
+        coEvery { addItem(any()) } returns Response.success(item)
+        coEvery { getItem(any()) } returns Response.success(item)
+        coEvery { deleteItem(any()) } returns Response.success(Unit)
     }
+    private val itemDao = mockk<ItemDao> {
+        coEvery { findAllItems() } returns dbItems.map { it.toItemDbEntity() }
+        coEvery { findItemsByLocation(any()) } returns dbItems.map { it.toItemDbEntity() }
+        coEvery { replaceItems(any(), any()) } just runs
+        coEvery { getItemById(any()) } returns item.toItemDbEntity()
+        coEvery { updateItem(any()) } just runs
+        coEvery { addItem(any()) } just runs
+        coEvery { deleteItem(any()) } just runs
+    }
+    private val deleteDao = mockk<DeleteDao> {
+        coEvery { getIds() } returns deleteIds
+        coEvery { removeIds() } just runs
+        coEvery { addId(any()) } just runs
+    }
+    private val downloader = mockk<AndroidDownloader> {
+        every { downloadFile(any()) } returns 0L
+    }
+
+    private val repository: Repository = RepositoryImpl(apiService, itemDao, deleteDao, downloader)
 
     @Test
     fun `getItems returns dbData when api call fails`() = runTest {
@@ -229,10 +232,25 @@ class RepositoryTest {
         coVerify(exactly = 1) { deleteDao.addId(DeleteIdEntity(ID)) }
     }
 
+    @Test
+    fun `download all items data in excel file`() = runTest {
+        repository.downloadItemsExcel("")
+        coVerify(exactly = 1) { downloader.downloadFile(URL) }
+    }
+
+    @Test
+    fun `download items in location data in excel file`() = runTest {
+        val location = "3-405"
+        repository.downloadItemsExcel(location)
+
+        coVerify(exactly = 1) { downloader.downloadFile("$URL/$location") }
+    }
+
     companion object {
 
         private const val ID = "id"
         private const val LOCATION = "location"
+        private const val URL = "http://192.168.1.139/api/v1/items/excel/download"
 
         private val deleteIds = listOf(DeleteIdEntity("id3"))
         private val dbItems = listOf(
