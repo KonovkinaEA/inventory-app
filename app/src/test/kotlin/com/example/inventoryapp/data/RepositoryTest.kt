@@ -27,6 +27,7 @@ class RepositoryTest {
         coEvery { addItem(any()) } returns Response.success(item)
         coEvery { getItem(any()) } returns Response.success(item)
         coEvery { deleteItem(any()) } returns Response.success(Unit)
+        coEvery { generateReport(any()) } returns Response.success(Unit)
     }
     private val itemDao = mockk<ItemDao> {
         coEvery { findAllItems() } returns dbItems.map { it.toItemDbEntity() }
@@ -235,7 +236,7 @@ class RepositoryTest {
     @Test
     fun `download all items data in excel file`() = runTest {
         repository.downloadItemsExcel("")
-        coVerify(exactly = 1) { downloader.downloadFile(URL) }
+        coVerify(exactly = 1) { downloader.downloadFile(URL_DOWNLOAD) }
     }
 
     @Test
@@ -243,14 +244,23 @@ class RepositoryTest {
         val location = "3-405"
         repository.downloadItemsExcel(location)
 
-        coVerify(exactly = 1) { downloader.downloadFile("$URL/$location") }
+        coVerify(exactly = 1) { downloader.downloadFile("$URL_DOWNLOAD/$location") }
+    }
+
+    @Test
+    fun `download report`() = runTest {
+        repository.getReport(apiItems)
+
+        coVerify(exactly = 1) { apiService.generateReport(apiItems) }
+        coVerify(exactly = 1) { downloader.downloadFile(URL_REPORT) }
     }
 
     companion object {
 
         private const val ID = "id"
         private const val LOCATION = "location"
-        private const val URL = "http://192.168.1.139/api/v1/items/excel/download"
+        private const val URL_DOWNLOAD = "http://192.168.1.139/api/v1/items/excel/download"
+        private const val URL_REPORT = "http://192.168.1.139/api/v1/items/excel/report"
 
         private val deleteIds = listOf(DeleteIdEntity("id3"))
         private val dbItems = listOf(

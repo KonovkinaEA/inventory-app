@@ -116,6 +116,11 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getReport(items: List<InventoryItem>) {
+        apiService.generateReport(items)
+        downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/report")
+    }
+
     private fun updateList(
         response: Response<List<InventoryItem>>,
         dbData: List<InventoryItem>,

@@ -12,4 +12,5 @@ interface Repository {
     suspend fun saveItem(item: InventoryItem)
     suspend fun deleteItem(id: String)
     suspend fun downloadItemsExcel(location: String)
+    suspend fun getReport(items: List<InventoryItem>)
 }
