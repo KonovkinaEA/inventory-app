@@ -25,6 +25,7 @@ fun CustomDialog(
     value: String,
     inputFieldLabel: String,
     buttonLabel: String,
+    enable: Boolean = value.isNotEmpty(),
     onValueChanged: (String) -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
@@ -53,7 +54,7 @@ fun CustomDialog(
                 }
                 MenuCardButton(
                     text = buttonLabel,
-                    enable = value.isNotEmpty()
+                    enable = enable
                 ) { onConfirmation() }
             }
         }

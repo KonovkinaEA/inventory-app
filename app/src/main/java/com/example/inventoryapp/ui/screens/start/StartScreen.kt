@@ -127,6 +127,7 @@ private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) 
                 value = state.username,
                 inputFieldLabel = "Имя пользователя",
                 buttonLabel = "Сохранить",
+                enable = true,
                 onValueChanged = { onUiAction(StartUiAction.UpdateUsername(it)) },
                 onDismissRequest = {
                     openSettingsDialog = false

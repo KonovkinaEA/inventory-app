@@ -98,6 +98,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // test
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk.mockk)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
