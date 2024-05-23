@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.inventoryapp.data.model.InventoryItem
 import com.example.inventoryapp.ui.common.MenuElevatedCard
+import com.example.inventoryapp.ui.screens.list.components.ListBottomAppBar
 import com.example.inventoryapp.ui.screens.list.components.ListTopAppBar
 import com.example.inventoryapp.ui.screens.list.components.MenuTitle
 import com.example.inventoryapp.ui.screens.list.model.ListUiAction
@@ -53,6 +54,7 @@ fun ListScreen(
 private fun ListScreenContent(state: ListUiState, onUiAction: (ListUiAction) -> Unit) {
     Scaffold(
         topBar = { ListTopAppBar(state.location, onUiAction) },
+        bottomBar = { ListBottomAppBar { onUiAction(ListUiAction.DownloadExcel) } },
         containerColor = ExtendedTheme.colors.backPrimary
     ) { paddingValues ->
         LazyColumn(

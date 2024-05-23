@@ -234,7 +234,7 @@ class RepositoryTest {
 
     @Test
     fun `download all items data in excel file`() = runTest {
-        repository.downloadItemsExcel()
+        repository.downloadItemsExcel("")
         coVerify(exactly = 1) { downloader.downloadFile(URL) }
     }
 
