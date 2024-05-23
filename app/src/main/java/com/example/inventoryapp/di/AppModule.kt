@@ -3,6 +3,7 @@ package com.example.inventoryapp.di
 import android.content.Context
 import com.example.inventoryapp.data.Repository
 import com.example.inventoryapp.data.RepositoryImpl
+import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
 import com.example.inventoryapp.data.db.AppDatabase
 import dagger.Binds
@@ -26,6 +27,11 @@ interface AppModule {
     fun provideRepository(repository: RepositoryImpl): Repository
 
     companion object {
+
+        @Singleton
+        @Provides
+        fun provideAndroidDownloader(@ApplicationContext context: Context) =
+            AndroidDownloader(context)
 
         @Singleton
         @Provides

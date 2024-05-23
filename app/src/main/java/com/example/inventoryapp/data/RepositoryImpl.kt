@@ -1,5 +1,6 @@
 package com.example.inventoryapp.data
 
+import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
 import com.example.inventoryapp.data.api.model.UpdatedData
 import com.example.inventoryapp.data.db.DeleteDao
@@ -12,7 +13,8 @@ import javax.inject.Inject
 class RepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val itemDao: ItemDao,
-    private val deleteDao: DeleteDao
+    private val deleteDao: DeleteDao,
+    private val downloader: AndroidDownloader
 ) : Repository {
 
     override suspend fun getItems(): List<InventoryItem> {
@@ -104,6 +106,10 @@ class RepositoryImpl @Inject constructor(
             apiService.deleteItem(id)
         } catch (_: Exception) {
         }
+    }
+
+    override suspend fun downloadItemsExcel() {
+        downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/download")
     }
 
     private fun updateList(

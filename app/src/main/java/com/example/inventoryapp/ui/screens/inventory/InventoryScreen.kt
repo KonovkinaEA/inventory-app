@@ -87,7 +87,9 @@ private fun InventoryScreenContent(
                         onUiAction(InventoryUiAction.StartScanning)
                     }
                 } else {
-                    MenuCardButton(text = "Получить отчет") {}
+                    MenuCardButton(text = "Получить отчет") {
+                        onUiAction(InventoryUiAction.DownloadExcel)
+                    }
                 }
             }
             if (!state.endProcess) {

@@ -69,6 +69,9 @@ class InventoryViewModel @Inject constructor(
                 }
                 _uiState.value = uiState.value.copy(list = currentList.toList(), endProcess = true)
             }
+            InventoryUiAction.DownloadExcel -> viewModelScope.launch(ioDispatcher) {
+                repository.downloadItemsExcel()
+            }
             is InventoryUiAction.UpdateBarcode -> viewModelScope.launch {
                 _uiState.value = uiState.value.copy(barcode = action.barcode)
             }

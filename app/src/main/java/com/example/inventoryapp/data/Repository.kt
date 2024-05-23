@@ -11,4 +11,5 @@ interface Repository {
     suspend fun getItemByInventoryNum(inventoryNum: String): InventoryItem?
     suspend fun saveItem(item: InventoryItem)
     suspend fun deleteItem(id: String)
+    suspend fun downloadItemsExcel()
 }
