@@ -5,11 +5,11 @@ import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
 
-class AndroidDownloader(context: Context) : Downloader {
+class AndroidDownloader(context: Context) {
 
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
 
-    override fun downloadFile(url: String): Long {
+    fun downloadFile(url: String): Long {
         val request = DownloadManager.Request(url.toUri())
             .setMimeType("application/vnd.ms-excel")
             .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
