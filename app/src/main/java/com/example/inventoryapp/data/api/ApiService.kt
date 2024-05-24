@@ -35,4 +35,7 @@ interface ApiService {
 
     @DELETE("items/item")
     suspend fun deleteItem(@Query("id") id: String): Response<Unit>
+
+    @POST("items/excel/report")
+    suspend fun generateReport(@Body items: List<InventoryItem>): Response<Unit>
 }

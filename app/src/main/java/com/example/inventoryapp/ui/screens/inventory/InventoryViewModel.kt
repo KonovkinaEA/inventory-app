@@ -72,6 +72,9 @@ class InventoryViewModel @Inject constructor(
                     repository.saveItem(it)
                 }
             }
+            InventoryUiAction.GetReport -> viewModelScope.launch(ioDispatcher) {
+                repository.getReport(_uiState.value.list)
+            }
             is InventoryUiAction.UpdateBarcode -> viewModelScope.launch {
                 _uiState.value = uiState.value.copy(barcode = action.barcode)
             }

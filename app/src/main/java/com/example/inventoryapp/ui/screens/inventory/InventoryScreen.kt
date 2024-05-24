@@ -74,20 +74,27 @@ private fun InventoryScreenContent(
     BottomSheetScaffold(
         topBar = { InventoryTopAppBar(state, onUiAction) },
         sheetContent = {
-            if (!state.endProcess) {
-                Column(
-                    modifier = Modifier
-                        .onGloballyPositioned {
-                            columnHeightDp = with(localDensity) { it.size.height.toDp() }
-                        }
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                ) {
+
+            Column(
+                modifier = Modifier
+                    .onGloballyPositioned {
+                        columnHeightDp = with(localDensity) { it.size.height.toDp() }
+                    }
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
+                if (!state.endProcess) {
                     MenuCardButton(text = "Сканировать штрихкод") {
                         onUiAction(InventoryUiAction.StartScanning)
                     }
+                } else {
+                    MenuCardButton(text = "Получить отчет") {
+                        onUiAction(InventoryUiAction.GetReport)
+                    }
                 }
-                Column(modifier = Modifier.padding(20.dp)) {
+            }
+            Column(modifier = Modifier.padding(20.dp)) {
+                if (!state.endProcess) {
                     MenuInputField(
                         label = "Штрихкод",
                         value = state.barcode,
@@ -121,7 +128,7 @@ private fun InventoryScreenContent(
                 }
             }
         },
-        sheetPeekHeight = if (state.endProcess) 0.dp else BottomSheetDefaults.SheetPeekHeight + columnHeightDp,
+        sheetPeekHeight = BottomSheetDefaults.SheetPeekHeight + columnHeightDp,
         sheetShadowElevation = 10.dp,
         sheetSwipeEnabled = !state.endProcess,
         sheetContainerColor = ExtendedTheme.colors.backSecondary,
