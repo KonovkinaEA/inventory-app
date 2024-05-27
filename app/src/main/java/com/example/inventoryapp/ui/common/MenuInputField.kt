@@ -16,8 +16,13 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -32,6 +37,7 @@ import com.example.inventoryapp.ui.theme.White
 fun MenuInputField(
     label: String,
     value: String,
+    labelSecondPart: String = "",
     readOnly: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     confirmButton: Boolean = false,
@@ -39,6 +45,9 @@ fun MenuInputField(
     onValueChanged: (String) -> Unit
 ) {
     val enable = !readOnly || value.isNotEmpty()
+    var isFocused by remember { mutableStateOf(false) }
+
+    val finalLabel = if (isFocused || value.isNotEmpty()) label else label + labelSecondPart
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedTextField(
@@ -49,13 +58,15 @@ fun MenuInputField(
             onValueChange = { onValueChanged(it) },
             label = {
                 Text(
-                    text = label,
+                    text = finalLabel,
                     style = MaterialTheme.typography.bodyLarge
                 )
             },
             colors = ExtendedTheme.textFieldColors,
             singleLine = true,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .onFocusChanged { isFocused = it.isFocused },
             keyboardOptions = keyboardOptions
         )
 

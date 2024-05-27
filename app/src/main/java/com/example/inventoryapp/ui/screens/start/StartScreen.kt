@@ -91,52 +91,50 @@ private fun StartScreenContent(state: StartUiState, onUiAction: (StartUiAction) 
         if (openLocationListDialog) {
             CustomDialog(
                 value = state.location,
-                inputFieldLabel = "Местоположение",
-                buttonLabel = "Найти",
+                inputLabel = "Местоположение",
+                buttonText = "Найти",
                 onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
                 onDismissRequest = {
                     openLocationListDialog = false
                     onUiAction(StartUiAction.ClearLocation)
-                },
-                onConfirmation = {
-                    openLocationListDialog = false
-                    onUiAction(StartUiAction.OpenLocationList)
-                    onUiAction(StartUiAction.ClearLocation)
                 }
-            )
+            ) {
+                openLocationListDialog = false
+                onUiAction(StartUiAction.OpenLocationList)
+                onUiAction(StartUiAction.ClearLocation)
+            }
         }
         if (openLocationInventoryDialog) {
             CustomDialog(
                 value = state.location,
-                inputFieldLabel = "Местоположение",
-                buttonLabel = "Начать",
+                inputLabel = "Местоположение",
+                buttonText = "Начать",
                 onValueChanged = { onUiAction(StartUiAction.UpdateLocation(it)) },
                 onDismissRequest = {
                     openLocationInventoryDialog = false
                     onUiAction(StartUiAction.ClearLocation)
-                },
-                onConfirmation = {
-                    openLocationInventoryDialog = false
-                    onUiAction(StartUiAction.OpenInventory)
-                    onUiAction(StartUiAction.ClearLocation)
                 }
-            )
+            ) {
+                openLocationInventoryDialog = false
+                onUiAction(StartUiAction.OpenInventory)
+                onUiAction(StartUiAction.ClearLocation)
+            }
         }
         if (openSettingsDialog) {
             CustomDialog(
-                value = state.username,
-                inputFieldLabel = "Имя пользователя",
-                buttonLabel = "Сохранить",
-                enable = true,
-                onValueChanged = { onUiAction(StartUiAction.UpdateUsername(it)) },
+                value = state.ipAddress,
+                inputLabel = "IP-адрес",
+                buttonText = "Сохранить",
+                enable = Regex("""\d+\.\d+\.\d+\.\d+""").matches(state.ipAddress),
+                inputLabelSecondPart = " (напр. 192.168.1.139)",
+                onValueChanged = { onUiAction(StartUiAction.UpdateIpAddress(it)) },
                 onDismissRequest = {
                     openSettingsDialog = false
-                },
-                onConfirmation = {
-                    openSettingsDialog = false
-                    onUiAction(StartUiAction.SaveUsername)
                 }
-            )
+            ) {
+                openSettingsDialog = false
+                onUiAction(StartUiAction.SaveIpAddress)
+            }
         }
     }
 }

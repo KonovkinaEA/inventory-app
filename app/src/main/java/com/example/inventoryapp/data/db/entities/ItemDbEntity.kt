@@ -20,7 +20,6 @@ data class ItemDbEntity(
     @ColumnInfo(name = "is_correctly_placed") val isCorrectlyPlaced: Boolean,
     val count: Int?,
     @ColumnInfo(name = "changed_at") val changedAt: Long,
-    @ColumnInfo(name = "last_updated_by") val lastUpdatedBy: String,
     val revision: Long
 ) {
 
@@ -37,7 +36,6 @@ data class ItemDbEntity(
         isCorrectlyPlaced = isCorrectlyPlaced,
         count = count,
         changedAt = changedAt,
-        lastUpdatedBy = lastUpdatedBy,
         revision = revision
     )
 }

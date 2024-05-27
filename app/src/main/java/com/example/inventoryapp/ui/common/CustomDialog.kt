@@ -2,10 +2,9 @@ package com.example.inventoryapp.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -16,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.inventoryapp.ui.theme.ExtendedTheme
 import com.example.inventoryapp.ui.theme.InventoryAppTheme
 import com.example.inventoryapp.ui.theme.ThemeModePreview
@@ -23,18 +23,22 @@ import com.example.inventoryapp.ui.theme.ThemeModePreview
 @Composable
 fun CustomDialog(
     value: String,
-    inputFieldLabel: String,
-    buttonLabel: String,
+    inputLabel: String,
+    buttonText: String,
     enable: Boolean = value.isNotEmpty(),
+    inputLabelSecondPart: String = "",
     onValueChanged: (String) -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(
+        onDismissRequest = { onDismissRequest() },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .wrapContentHeight()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
@@ -46,14 +50,17 @@ fun CustomDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(15.dp, Alignment.CenterVertically),
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(20.dp)
             ) {
-                MenuInputField(label = inputFieldLabel, value = value, readOnly = false) {
-                    onValueChanged(it)
-                }
+                MenuInputField(
+                    label = inputLabel,
+                    value = value,
+                    labelSecondPart = inputLabelSecondPart,
+                    readOnly = false
+                ) { onValueChanged(it) }
                 MenuCardButton(
-                    text = buttonLabel,
+                    text = buttonText,
                     enable = enable
                 ) { onConfirmation() }
             }
@@ -69,8 +76,9 @@ private fun CustomDialogPreview(
     InventoryAppTheme(darkTheme = darkTheme) {
         CustomDialog(
             value = "",
-            inputFieldLabel = "Местоположение",
-            buttonLabel = "Найти",
+            inputLabel = "IP-адрес",
+            buttonText = "Сохранить и проверить",
+            inputLabelSecondPart = " (напр. 192.168.1.139)",
             onValueChanged = {},
             onDismissRequest = {}) {}
     }

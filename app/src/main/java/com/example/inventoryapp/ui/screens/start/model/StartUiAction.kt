@@ -6,8 +6,8 @@ sealed class StartUiAction {
     data object OpenInventory : StartUiAction()
     data object OpenLocationList : StartUiAction()
     data object ClearLocation : StartUiAction()
-    data object SaveUsername : StartUiAction()
+    data object SaveIpAddress : StartUiAction()
 
     data class UpdateLocation(val location: String) : StartUiAction()
-    data class UpdateUsername(val name: String) : StartUiAction()
+    data class UpdateIpAddress(val address: String) : StartUiAction()
 }

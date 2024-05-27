@@ -3,6 +3,7 @@ package com.example.inventoryapp.data
 import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
 import com.example.inventoryapp.data.api.model.UpdatedData
+import com.example.inventoryapp.data.datastore.DataStoreManager
 import com.example.inventoryapp.data.db.DeleteDao
 import com.example.inventoryapp.data.db.ItemDao
 import com.example.inventoryapp.data.db.entities.DeleteIdEntity
@@ -14,7 +15,8 @@ class RepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val itemDao: ItemDao,
     private val deleteDao: DeleteDao,
-    private val downloader: AndroidDownloader
+    private val downloader: AndroidDownloader,
+    private val datsStoreManager: DataStoreManager
 ) : Repository {
 
     override suspend fun getItems(): List<InventoryItem> {
@@ -109,16 +111,18 @@ class RepositoryImpl @Inject constructor(
     }
 
     override suspend fun downloadItemsExcel(location: String) {
+        val ipAddress = datsStoreManager.getIpAddress()
         if (location.isNotEmpty()) {
-            downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/download/${location}")
+            downloader.downloadFile("http://${ipAddress}/api/v1/items/excel/download/${location}")
         } else {
-            downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/download")
+            downloader.downloadFile("http://${ipAddress}/api/v1/items/excel/download")
         }
     }
 
     override suspend fun getReport(items: List<InventoryItem>) {
+        val ipAddress = datsStoreManager.getIpAddress()
         apiService.generateReport(items)
-        downloader.downloadFile("http://192.168.1.139/api/v1/items/excel/report")
+        downloader.downloadFile("http://${ipAddress}/api/v1/items/excel/report")
     }
 
     private fun updateList(

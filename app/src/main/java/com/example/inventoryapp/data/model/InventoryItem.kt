@@ -17,7 +17,6 @@ data class InventoryItem(
     val isCorrectlyPlaced: Boolean = true,
     val count: Int? = null,
     val changedAt: Long = Date().time,
-    val lastUpdatedBy: String = "",
     val revision: Long = -1
 ) {
 
@@ -34,7 +33,6 @@ data class InventoryItem(
         isCorrectlyPlaced = isCorrectlyPlaced,
         count = count,
         changedAt = changedAt,
-        lastUpdatedBy = lastUpdatedBy,
         revision = revision
     )
 }

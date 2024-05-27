@@ -3,6 +3,7 @@ package com.example.inventoryapp.data.datastore
 import android.content.Context
 import androidx.datastore.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,9 +14,14 @@ class DataStoreManager @Inject constructor(@ApplicationContext appContext: Conte
     private val settingsDataStore = appContext.protoDataStore
     val userSettings = settingsDataStore.data
 
-    suspend fun saveUsername(username: String) {
+    suspend fun saveIpAddress(address: String) {
         settingsDataStore.updateData { settings ->
-            settings.copy(username = username)
+            settings.copy(ipAddress = address)
         }
+    }
+
+    suspend fun getIpAddress(): String? {
+        val settings = userSettings.first()
+        return settings.ipAddress
     }
 }
