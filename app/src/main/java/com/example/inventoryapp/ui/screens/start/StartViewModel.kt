@@ -31,7 +31,7 @@ class StartViewModel @Inject constructor(
     init {
         viewModelScope.launch(ioDispatcher) {
             dataStoreManager.userSettings.collectLatest { settings ->
-                settings.username?.let { _uiState.value = StartUiState(username = it) }
+                settings.ipAddress?.let { _uiState.value = StartUiState(ipAddress = it) }
             }
         }
     }
@@ -46,18 +46,18 @@ class StartViewModel @Inject constructor(
                 _uiEvent.send(StartUiEvent.OpenList(_uiState.value.location))
             StartUiAction.ClearLocation ->
                 _uiState.value = uiState.value.copy(location = "")
-            StartUiAction.SaveUsername -> viewModelScope.launch(ioDispatcher) {
-                dataStoreManager.saveUsername(_uiState.value.username)
+            StartUiAction.SaveIpAddress -> viewModelScope.launch(ioDispatcher) {
+                dataStoreManager.saveIpAddress(_uiState.value.ipAddress)
             }
             is StartUiAction.UpdateLocation ->
                 _uiState.value = uiState.value.copy(location = action.location)
-            is StartUiAction.UpdateUsername ->
-                _uiState.value = uiState.value.copy(username = action.name)
+            is StartUiAction.UpdateIpAddress ->
+                _uiState.value = uiState.value.copy(ipAddress = action.address)
         }
     }
 }
 
 data class StartUiState(
     val location: String = "",
-    val username: String = ""
+    val ipAddress: String = ""
 )
