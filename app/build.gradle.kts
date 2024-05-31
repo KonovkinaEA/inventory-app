@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("kapt")
     alias(libs.plugins.hilt)
-//    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 android {
@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.inventoryapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -26,7 +26,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -57,16 +60,22 @@ dependencies {
     // barcode scanner
     implementation(libs.gms.code.scanner)
 
-    // camera
-    implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.view)
-
     // hilt
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.hilt.navigation)
     kapt(libs.dagger.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)
+
+    // networking
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.okhttp3.logging.interceptor)
+
+    // room
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     // core
     implementation(libs.androidx.core.ktx)
@@ -77,14 +86,25 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons)
+    implementation(libs.androidx.work.runtime)
+
+    // custom dialogs
+    implementation(libs.maxkeppeler.dialogs.core)
+    implementation(libs.maxkeppeler.dialogs.calendar)
+
+    // datastore
+    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.serialization.json)
 
     // test
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk.mockk)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
