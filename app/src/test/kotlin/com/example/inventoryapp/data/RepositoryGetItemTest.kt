@@ -2,6 +2,7 @@ package com.example.inventoryapp.data
 
 import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
+import com.example.inventoryapp.data.datastore.DataStoreManager
 import com.example.inventoryapp.data.db.DeleteDao
 import com.example.inventoryapp.data.db.ItemDao
 import com.example.inventoryapp.data.model.InventoryItem
@@ -23,8 +24,10 @@ class RepositoryGetItemTest {
     private val itemDao = mockk<ItemDao>()
     private val deleteDao = mockk<DeleteDao>()
     private val downloader = mockk<AndroidDownloader>()
+    private val dataStoreManager = mockk<DataStoreManager>()
 
-    private val repository: Repository = RepositoryImpl(apiService, itemDao, deleteDao, downloader)
+    private val repository: Repository =
+        RepositoryImpl(apiService, itemDao, deleteDao, downloader, dataStoreManager)
 
     @Before
     fun setUp() {
