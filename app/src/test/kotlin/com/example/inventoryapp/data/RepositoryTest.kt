@@ -2,6 +2,7 @@ package com.example.inventoryapp.data
 
 import com.example.inventoryapp.data.api.AndroidDownloader
 import com.example.inventoryapp.data.api.ApiService
+import com.example.inventoryapp.data.datastore.DataStoreManager
 import com.example.inventoryapp.data.db.DeleteDao
 import com.example.inventoryapp.data.db.ItemDao
 import com.example.inventoryapp.data.db.entities.DeleteIdEntity
@@ -46,8 +47,12 @@ class RepositoryTest {
     private val downloader = mockk<AndroidDownloader> {
         every { downloadFile(any()) } returns 0L
     }
+    private val dataStoreManager = mockk<DataStoreManager> {
+        coEvery { getIpAddress() } returns URL
+    }
 
-    private val repository: Repository = RepositoryImpl(apiService, itemDao, deleteDao, downloader)
+    private val repository: Repository =
+        RepositoryImpl(apiService, itemDao, deleteDao, downloader, dataStoreManager)
 
     @Test
     fun `getItems returns dbData when api call fails`() = runTest {
@@ -259,8 +264,9 @@ class RepositoryTest {
 
         private const val ID = "id"
         private const val LOCATION = "location"
-        private const val URL_DOWNLOAD = "http://192.168.1.139/api/v1/items/excel/download"
-        private const val URL_REPORT = "http://192.168.1.139/api/v1/items/excel/report"
+        private const val URL = "192.168.1.139"
+        private const val URL_DOWNLOAD = "http://${URL}/api/v1/items/excel/download"
+        private const val URL_REPORT = "http://${URL}/api/v1/items/excel/report"
 
         private val deleteIds = listOf(DeleteIdEntity("id3"))
         private val dbItems = listOf(

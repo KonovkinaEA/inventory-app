@@ -32,12 +32,12 @@ class SettingsSerializerTest {
 
     @Test
     fun `read from InputStream returns UserSettings`() = runBlocking {
-        val json = """{"username":"testUser"}"""
+        val json = """{"ipAddress":"address"}"""
         val inputStream = ByteArrayInputStream(json.toByteArray())
 
         val result = SettingsSerializer.readFrom(inputStream)
 
-        assertEquals(UserSettings(username = "testUser"), result)
+        assertEquals(UserSettings(ipAddress = "address"), result)
     }
 
     @Test
@@ -52,12 +52,12 @@ class SettingsSerializerTest {
 
     @Test
     fun `write to OutputStream writes UserSettings`() = runBlocking {
-        val userSettings = UserSettings(username = "testUser")
+        val userSettings = UserSettings(ipAddress = "address")
         val outputStream = ByteArrayOutputStream()
 
         SettingsSerializer.writeTo(userSettings, outputStream)
 
-        val expectedJson = """{"username":"testUser"}"""
+        val expectedJson = """{"ipAddress":"address"}"""
         assertEquals(expectedJson, outputStream.toString())
     }
 }
